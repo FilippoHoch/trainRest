@@ -42,8 +42,7 @@ public class Utility {
      * @return returns a date
      */
     public static Date stringToDateTime(String string) {
-        Date temp = Date.from(LocalDateTime.parse(string, DateTimeFormatter.ofPattern("dd/MM/yyyy-HH:mm")).atZone(ZoneId.systemDefault()).toInstant());
-        return temp;
+        return Date.from(LocalDateTime.parse(string, DateTimeFormatter.ofPattern("dd/MM/yyyy-HH:mm")).atZone(ZoneId.systemDefault()).toInstant());
     }
 
     /**

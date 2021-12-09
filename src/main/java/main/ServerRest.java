@@ -313,67 +313,32 @@ public class ServerRest {
 
     // TODO: 08/12/2021 resolve the date problem (departure and arrive are inverted) and the date isn't right
 
-    /**
-     * based on the first and the last station of a path the client decides, this function calculates the time it takes to travel that path
-     *
-     * @param path
-     * @param startingStation
-     * @param destinationStation
-     * @return returns the time of when the train will arrive at the last station
-     */
-    public Date DestinationStationTime(int path, int startingStation, int destinationStation) {
-        List<Link> linkList = LinkManager.filterLinks(linkManager.getAllLinks(), path);
-        int destinationTime = 0;
-        boolean isStartingStationBefore = false;
-        if (linkList.get(0).getStartStation() == startingStation)
-            isStartingStationBefore = true;
-        for (Link link : linkList) {
-            destinationTime += link.getCost();
-            if (isStartingStationBefore) {
-                if (link.getEndStation() == destinationStation)
-                    break;
-            } else if (link.getEndStation() == startingStation)
-                isStartingStationBefore = true;
+    public static Date destinationStationTime(int pathNumber, Date day){
+
+        Path path = paths.get(pathNumber);
+        int time = 0;
+        for (int i = 0; i < path.getLinks().size(); i++) {
+            for (Station station : path.getStations()) {
+                if(station.getId() == path.getLinks().get(i).getStartStation()) {
+                        time += path.getLinks().get(i).getCost();
+
+                }
+            }
+
         }
-        return new Date(paths.get(path).getDepartureTime().getTime() + destinationTime * 60000L);
+        return new Date(day.getTime() + paths.get(pathNumber).getDepartureTime().getTime() + (time * 60000L));
     }
 
-    /**
-     * based on the destinationTime, the function used before, the path and the first and last stations, this function calculates the time of when the train leaves the first station
-     *
-     * @param path
-     * @param startingStation
-     * @param destinationStation
-     * @param destinationTime
-     * @return returns the time of when the train leaves the first station
-     */
-    public Date StartingStationTime(int path, int startingStation, int destinationStation, Date destinationTime) {
-        List<Link> linkList = LinkManager.filterLinks(linkManager.getAllLinks(), path);
+    public static Date startingStationTime(int pathNumber, int startingStation, Date day){
         int startingTime = 0;
-        boolean isStartingStationBefore = false;
-        int id = 0;
-        Date result = new Date();
-        if (linkList.get(0).getStartStation() == startingStation)
-            isStartingStationBefore = true;
-        for (Link link : linkList) {
-            if (isStartingStationBefore) {
-                if (link.getEndStation() == destinationStation) {
-                    id = linkList.indexOf(link);
-                    break;
-                }
-            } else if (link.getEndStation() == startingStation)
-                isStartingStationBefore = true;
-        }
-        for (int i = id; i >= 0; i--) {
-            if (linkList.get(i).getEndStation() == startingStation) {
-                result = new Date(destinationTime.getTime() - (new Date(startingTime * 60000L).getTime()));
+        List<Link> pathsLink = paths.get(pathNumber).getLinks();
+        for(int i = 0; i < paths.get(pathNumber).getSizeLinks(); i++){
+            if(pathsLink.get(i).getStartStation() == startingStation)
                 break;
-            } else if (linkList.get(i).getStartStation() == startingStation) {
-                return new Date(paths.get(path).getDepartureTime().getTime());
-            }
-            startingTime += linkList.get(i).getCost();
+            startingTime = startingTime + pathsLink.get(i).getCost();
         }
-        return result;
+        long dateResult = startingTime * 60000L + day.getTime() + paths.get(pathNumber).getDepartureTime().getTime();
+        return new Date(dateResult);
     }
 
     public static void main(String[] args) {
