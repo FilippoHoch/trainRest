@@ -145,8 +145,7 @@ public class MainController implements Initializable {
     @FXML
     void openGuide(ActionEvent event) {
         try {
-            // TODO: 08/12/2021 change and create new github references
-            Desktop.getDesktop().browse(new URL("https://github.com/https://github.com/FilippoHoch/trainRest").toURI());
+            Desktop.getDesktop().browse(new URL("https://github.com/FilippoHoch/trainRest").toURI());
         } catch (IOException | URISyntaxException e) {
             e.printStackTrace();
         }
@@ -243,7 +242,7 @@ public class MainController implements Initializable {
         for (Ticket ticket : tickets) {
             for (Path path : paths) {
                 if (path.getPathNumber() == ticket.getRoadPath())
-                    listViewTickets.getItems().add(String.format("%s: %s, Orario partenza: %s - Orario arrivo: %s, Prezzo: %s ", ticket.getRoadPath(), path.getName(), ticket.getDepartureDate(), ticket.getArriveDate(), ticket.getTotalCost()));
+                    listViewTickets.getItems().add(String.format("%s: %s, Orario partenza: %s - Orario arrivo: %s, Prezzo: %s ", ticket.getRoadPath(), path.getName(), Utility.dateToString(ticket.getDepartureDate()), Utility.dateToString(ticket.getArriveDate()), ticket.getTotalCost()));
             }
         }
     }

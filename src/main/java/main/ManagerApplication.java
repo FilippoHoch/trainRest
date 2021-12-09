@@ -7,18 +7,19 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class MainApplication extends Application {
+public class ManagerApplication extends Application {
 
     /**
      * this is the first window that opens after you run the program
      *
+     * @return opens the first window
      */
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoaderMain = new FXMLLoader(MainApplication.class.getResource("main.fxml"));
-        Scene sceneMain = new Scene(fxmlLoaderMain.load(), 600, 400);
-        stage.setTitle("Main");
-        stage.setScene(sceneMain);
+        FXMLLoader fxmlLoaderMain = new FXMLLoader(MainApplication.class.getResource("editDatabase.fxml"));
+        Scene sceneManager = new Scene(fxmlLoaderMain.load(), 198, 149);
+        stage.setTitle("Modifica Database");
+        stage.setScene(sceneManager);
         stage.setResizable(false);
         stage.show();
     }

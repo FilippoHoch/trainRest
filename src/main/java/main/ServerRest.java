@@ -25,6 +25,9 @@ public class ServerRest {
     public static Date currentDate = Date.from(LocalDate.now().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
     public static Date nextDate = new Date(currentDate.getTime() + 86400000);
 
+    public static Date startingTime;
+    public static Date destinationTime;
+
 
     // Da fare prima di venerdì
     // TODO: 08/12/2021 create a new MainApplication to launch editDatabase
@@ -47,9 +50,9 @@ public class ServerRest {
         stationManager.addStation(new Station(3, "D"));
 
         // initialize links
-        paths.add(new Path(0, "Dio", Utility.convertTime(8, 30), Utility.convertTime(9, 15), 100));
-        paths.add(new Path(1, "Merda", Utility.convertTime(8, 30), Utility.convertTime(9, 15), 150));
-        paths.add(new Path(2, "Bono", Utility.convertTime(8, 30), Utility.convertTime(9, 15), 350));
+        paths.add(new Path(0, "Temp1", Utility.convertTime(8, 30), Utility.convertTime(9, 15), 100));
+        paths.add(new Path(1, "Temp2", Utility.convertTime(8, 30), Utility.convertTime(9, 15), 150));
+        paths.add(new Path(2, "Temp3", Utility.convertTime(8, 30), Utility.convertTime(9, 15), 350));
 
         // from A
         linkManager.addLink(new Link(0, 1, 0, 1));
@@ -270,32 +273,34 @@ public class ServerRest {
                 System.out.print("no paths available");
             } else {
                 for (int a : numbers) {
-//                    System.out.print("path number " + a + " available from " + startStation.getName() + " to " + endStation.getName() + "\n");
+                    System.out.print("path number " + a + " available from " + startStation.getName() + " to " + endStation.getName() + "\n");
                     for (Path path : paths) {
                         if (path.getPathNumber() == a) {
                             path.setStations(pathFinder.getPath(start, end, a, stationManager.getAllStations(), linkManager.getAllLinks()));
                             path.setLinks(LinkManager.filterLinks(linkManager.getAllLinks(), a));
                         }
                     }
-                }
-            }
-            for (int a : numbers) {
-                for (Ticket ticket : tickets) {
-                    ticket.setTotalCost(LinkManager.filterLinks(linkManager.getAllLinks(), a));
-                    Date destinationTime = DestinationStationTime(a, start, end);
-                    Date startingTime = StartingStationTime(a, start, end, destinationTime);
-                    if (ticket.getRoadPath() == a && ticket.getaClass().getClassNumber().toString().equalsIgnoreCase(chosenClass) &&
-                            ticket.getTotalCost() <= Double.parseDouble(disponibilityPrice) && startingTime.getTime() >= Utility.stringToDateTime(departureTime).getTime()
-                            && destinationTime.getTime() <= Utility.stringToDateTime(arriveTime).getTime() && paths.get(a).getSeats() > 0) {
-                        ticket.setDepartureDate(startingTime);
-                        ticket.setArriveDate(destinationTime);
-                        ticket.setDepartureStation(stationManager.getStation(start).getName());
-                        ticket.setArriveStation(stationManager.getStation(end).getName());
-                        filteredTickets.add(ticket);
+                    for (Ticket ticket : tickets) {
+                        ticket.setTotalCost(LinkManager.filterLinks(linkManager.getAllLinks(), a));
+                        System.out.println("a: " + a + " start: " + start + " end: " + end);
+
+                        startingTime = startingStationTime(a, start, ticket.getDay());
+
+
+                        destinationTime = destinationStationTime(a, ticket.getDay());
+                        System.out.println("Starting time: " + startingTime + "\nDestination time: " + destinationTime);
+                        if (ticket.getRoadPath() == a && ticket.getaClass().getClassNumber().toString().equalsIgnoreCase(chosenClass) &&
+                                ticket.getTotalCost() <= Double.parseDouble(disponibilityPrice) && startingTime.getTime() >= Utility.stringToDateTime(departureTime).getTime()
+                                && destinationTime.getTime() <= Utility.stringToDateTime(arriveTime).getTime() && paths.get(a).getSeats() > 0) {
+                            ticket.setDepartureDate(startingTime);
+                            ticket.setArriveDate(destinationTime);
+                            ticket.setDepartureStation(stationManager.getStation(start).getName());
+                            ticket.setArriveStation(stationManager.getStation(end).getName());
+                            filteredTickets.add(ticket);
+                        }
                     }
+
                 }
-
-
             }
             return om.writeValueAsString(filteredTickets);
         }));

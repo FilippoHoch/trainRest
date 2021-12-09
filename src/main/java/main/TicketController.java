@@ -72,15 +72,17 @@ public class TicketController implements Initializable {
         boolean first = true;
         int time = 0;
         Date startingDate = ticket.getDepartureDate();
+
         for (int i = 0; i < path.getLinks().size(); i++) {
             for (Station station : path.getStations()) {
+
                 if (station.getId() == path.getLinks().get(i).getStartStation()) {
                     if (first) {
                         listViewStation.getItems().add(station.getName().concat(" - " + Utility.timeToString(startingDate)));
                         first = false;
+                        time += path.getLinks().get(i).getCost();
                     } else {
                         time += path.getLinks().get(i).getCost();
-                        System.out.println("Time: " + time);
                         Date nextStop = new Date(startingDate.getTime() + time * 60000L);
                         listViewStation.getItems().add(station.getName().concat(" - " + Utility.timeToString(nextStop)));
                     }

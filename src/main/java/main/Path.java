@@ -99,6 +99,7 @@ public class Path {
                 ", arrivalTime=" + arrivalTime +
                 ", seats=" + seats +
                 ", stations=" + stations +
+                ", links=" + links +
                 ", sizeLinks=" + sizeLinks +
                 '}';
     }

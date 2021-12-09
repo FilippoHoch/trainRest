@@ -1,9 +1,15 @@
 package main;
 
+import javafx.stage.Stage;
+
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
+import static main.ServerRest.tickets;
 
 public class Utility {
 
@@ -48,7 +54,7 @@ public class Utility {
      * @return returns the time in milliseconds
      */
     public static Date convertTime(int hours, int minutes) {
-        return new Date(ServerRest.currentDate.getTime() + (hours * 3600000L + minutes * 60000L));
+        return new Date((hours * 3600000L + minutes * 60000L));
     }
 
     /**
@@ -76,5 +82,15 @@ public class Utility {
         return temp;
     }
 
+
+    public static List<String> dateToList(Date date){
+        List<String> dateList = new ArrayList<>();
+        dateList.add(date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime().format(DateTimeFormatter.ofPattern("dd")));
+        dateList.add(date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime().format(DateTimeFormatter.ofPattern("MM")));
+        dateList.add(date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime().format(DateTimeFormatter.ofPattern("yyyy")));
+        dateList.add(date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime().format(DateTimeFormatter.ofPattern("HH")));
+        dateList.add(date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime().format(DateTimeFormatter.ofPattern("mm")));
+        return dateList;
+    }
 
 }
