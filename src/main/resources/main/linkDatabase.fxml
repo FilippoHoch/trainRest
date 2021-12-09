@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="259.0" prefWidth="496.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.LinkManagerController">
+   <children>
+      <Label layoutX="213.0" layoutY="26.0" text="Links menager">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Label>
+      <Button layoutX="304.0" layoutY="225.0" mnemonicParsing="false" onAction="#cancelEditLink" text="Annulla" />
+      <Button disable="true" layoutX="438.0" layoutY="225.0" mnemonicParsing="false" onAction="#saveLink" text="Salva" />
+      <Button disable="true" layoutX="369.0" layoutY="225.0" mnemonicParsing="false" onAction="#deleteLink" text="Cancella" />
+      <Label disable="true" layoutX="14.0" layoutY="81.0" text="Stazione iniziale:" />
+      <ChoiceBox fx:id="arriveStationLink" disable="true" layoutX="182.0" layoutY="104.0" prefWidth="150.0" />
+      <Label disable="true" layoutX="182.0" layoutY="81.0" text="Stazione d'arrivo:" />
+      <Label disable="true" layoutX="12.0" layoutY="157.0" text="Numero percorso:" />
+      <Button layoutX="14.0" layoutY="22.0" mnemonicParsing="false" onAction="#newLink" text="Nuovo" />
+      <ChoiceBox fx:id="viewLink" layoutX="74.0" layoutY="22.0" prefHeight="26.0" prefWidth="81.0" />
+      <ChoiceBox fx:id="startingStationLink" disable="true" layoutX="12.0" layoutY="104.0" prefWidth="150.0" />
+      <ChoiceBox fx:id="pathNumberLink" disable="true" layoutX="12.0" layoutY="177.0" prefWidth="150.0" />
+      <Label disable="true" layoutX="182.0" layoutY="157.0" text="Costo:" />
+      <TextField fx:id="linkCost" disable="true" layoutX="183.0" layoutY="177.0" />
+   </children>
+</AnchorPane>

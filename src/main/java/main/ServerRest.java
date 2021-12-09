@@ -12,7 +12,6 @@ import java.util.Date;
 import java.util.List;
 
 import static spark.Spark.*;
-import static spark.route.HttpMethod.put;
 
 public class ServerRest {
 
@@ -97,13 +96,13 @@ public class ServerRest {
         port(8090);
 
         put("/updateTicket", (((request, response) -> {
-            if(!request.queryParams().contains("elementNumber"))
+            if (!request.queryParams().contains("elementNumber"))
                 return "Missing element number";
-            if(request.queryParams().contains("roadPath"))
-            tickets.get(Integer.parseInt(request.queryParams("elementNumber"))).setRoadPath(Integer.parseInt(request.queryParams("roadPath")));
-            if(request.queryParams().contains("day"))
+            if (request.queryParams().contains("roadPath"))
+                tickets.get(Integer.parseInt(request.queryParams("elementNumber"))).setRoadPath(Integer.parseInt(request.queryParams("roadPath")));
+            if (request.queryParams().contains("day"))
                 tickets.get(Integer.parseInt(request.queryParams("elementNumber"))).setDay(Utility.stringToOnlyDate(request.queryParams("day")));
-            if(request.queryParams().contains("classNumber"))
+            if (request.queryParams().contains("classNumber"))
                 tickets.get(Integer.parseInt(request.queryParams("elementNumber"))).setaClass(classes.get(Integer.parseInt(request.queryParams("classNumber"))));
             return "Ticket Updated";
         })));
@@ -114,7 +113,7 @@ public class ServerRest {
         })));
 
         delete("/removeTicket", (((request, response) -> {
-            if (request.queryParams().contains("elementNumber")){
+            if (request.queryParams().contains("elementNumber")) {
                 tickets.remove(Integer.parseInt(request.queryParams("elementNumber")));
                 return "Ticket Removed";
             }
@@ -122,15 +121,15 @@ public class ServerRest {
         })));
 
         put("/updatePath", (((request, response) -> {
-            if(!request.queryParams().contains("elementNumber"))
+            if (!request.queryParams().contains("elementNumber"))
                 return "Missing element number";
-            if(request.queryParams().contains("pathName"))
+            if (request.queryParams().contains("pathName"))
                 paths.get(Integer.parseInt(request.queryParams("elementNumber"))).setName(request.queryParams("pathName"));
-            if(request.queryParams().contains("startDate"))
+            if (request.queryParams().contains("startDate"))
                 paths.get(Integer.parseInt(request.queryParams("elementNumber"))).setDepartureTime(Utility.stringToDate(request.queryParams("startDate")));
-            if(request.queryParams().contains("endDate"))
+            if (request.queryParams().contains("endDate"))
                 paths.get(Integer.parseInt(request.queryParams("elementNumber"))).setArrivalTime(Utility.stringToDate(request.queryParams("endDate")));
-            if(request.queryParams().contains("seats"))
+            if (request.queryParams().contains("seats"))
                 paths.get(Integer.parseInt(request.queryParams("elementNumber"))).setSeats(Integer.parseInt(request.queryParams("seats")));
             return "Path Updated";
         })));
@@ -141,7 +140,8 @@ public class ServerRest {
         })));
 
         delete("/removePath", (((request, response) -> {
-            if (request.queryParams().contains("elementNumber")){
+
+            if (request.queryParams().contains("elementNumber")) {
                 paths.remove(Integer.parseInt(request.queryParams("elementNumber")));
                 return "Path Removed";
             }
@@ -149,15 +149,15 @@ public class ServerRest {
         })));
 
         put("/updateLink", (((request, response) -> {
-            if(!request.queryParams().contains("elementNumber"))
+            if (!request.queryParams().contains("elementNumber"))
                 return "Missing element number";
-            if(request.queryParams().contains("startStation"))
+            if (request.queryParams().contains("startStation"))
                 linkManager.getAllLinks().get(Integer.parseInt(request.queryParams("elementNumber"))).setStartStation(Integer.parseInt(request.queryParams("startStation")));
-            if(request.queryParams().contains("endStation"))
+            if (request.queryParams().contains("endStation"))
                 linkManager.getAllLinks().get(Integer.parseInt(request.queryParams("elementNumber"))).setEndStation(Integer.parseInt(request.queryParams("endStation")));
-            if(request.queryParams().contains("pathNumber"))
+            if (request.queryParams().contains("pathNumber"))
                 linkManager.getAllLinks().get(Integer.parseInt(request.queryParams("elementNumber"))).setPathNumber(Integer.parseInt(request.queryParams("pathNumber")));
-            if(request.queryParams().contains("cost"))
+            if (request.queryParams().contains("cost"))
                 linkManager.getAllLinks().get(Integer.parseInt(request.queryParams("elementNumber"))).setCost(Integer.parseInt(request.queryParams("cost")));
             return "Link Updated";
         })));
@@ -169,7 +169,7 @@ public class ServerRest {
         })));
 
         delete("/removeLink", (((request, response) -> {
-            if (request.queryParams().contains("elementNumber")){
+            if (request.queryParams().contains("elementNumber")) {
                 linkManager.getAllLinks().remove(Integer.parseInt(request.queryParams("elementNumber")));
                 return "Link Removed";
             }
@@ -177,9 +177,9 @@ public class ServerRest {
         })));
 
         put("/updateStation", (((request, response) -> {
-            if(!request.queryParams().contains("elementNumber"))
+            if (!request.queryParams().contains("elementNumber"))
                 return "Missing element number";
-            if(request.queryParams().contains("stationName"))
+            if (request.queryParams().contains("stationName"))
                 stationManager.getStation(Integer.parseInt(request.queryParams("elementNumber"))).setName(request.queryParams("stationName"));
             return "Station Updated";
         })));
@@ -191,7 +191,7 @@ public class ServerRest {
         })));
 
         delete("/removeStation", (((request, response) -> {
-            if (request.queryParams().contains("elementNumber")){
+            if (request.queryParams().contains("elementNumber")) {
                 stationManager.stations.remove(Integer.parseInt(request.queryParams("elementNumber")));
                 return "Station Removed";
             }
@@ -199,11 +199,11 @@ public class ServerRest {
         })));
 
         put("/updateClass", (((request, response) -> {
-            if(!request.queryParams().contains("elementNumber"))
+            if (!request.queryParams().contains("elementNumber"))
                 return "Missing element number";
-            if(request.queryParams().contains("classNumber"))
+            if (request.queryParams().contains("classNumber"))
                 classes.get(Integer.parseInt(request.queryParams("elementNumber"))).setMultiplier(Integer.parseInt(request.queryParams("classNumber")));
-            if(request.queryParams().contains("multiplayer"))
+            if (request.queryParams().contains("multiplayer"))
                 classes.get(Integer.parseInt(request.queryParams("elementNumber"))).setMultiplier(Integer.parseInt(request.queryParams("multiplayer")));
             return "Station Updated";
         })));
@@ -214,7 +214,7 @@ public class ServerRest {
         })));
 
         delete("/removeClass", (((request, response) -> {
-            if (request.queryParams().contains("elementNumber")){
+            if (request.queryParams().contains("elementNumber")) {
                 classes.remove(Integer.parseInt(request.queryParams("elementNumber")));
                 return "Class Removed";
             }
@@ -270,7 +270,7 @@ public class ServerRest {
                 System.out.print("no paths available");
             } else {
                 for (int a : numbers) {
-                    System.out.print("path number " + a + " available from " + startStation.getName() + " to " + endStation.getName() + "\n");
+//                    System.out.print("path number " + a + " available from " + startStation.getName() + " to " + endStation.getName() + "\n");
                     for (Path path : paths) {
                         if (path.getPathNumber() == a) {
                             path.setStations(pathFinder.getPath(start, end, a, stationManager.getAllStations(), linkManager.getAllLinks()));
@@ -292,7 +292,6 @@ public class ServerRest {
                         ticket.setDepartureStation(stationManager.getStation(start).getName());
                         ticket.setArriveStation(stationManager.getStation(end).getName());
                         filteredTickets.add(ticket);
-                        System.out.println(ticket + "\n");
                     }
                 }
 
@@ -369,7 +368,6 @@ public class ServerRest {
             }
             startingTime += linkList.get(i).getCost();
         }
-        System.out.println(destinationStation + "\n" + result);
         return result;
     }
 

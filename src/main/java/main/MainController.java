@@ -146,7 +146,7 @@ public class MainController implements Initializable {
     void openGuide(ActionEvent event) {
         try {
             // TODO: 08/12/2021 change and create new github references
-            Desktop.getDesktop().browse(new URL("https://github.com/FilippoHoch/guessThePokemon").toURI());
+            Desktop.getDesktop().browse(new URL("https://github.com/https://github.com/FilippoHoch/trainRest").toURI());
         } catch (IOException | URISyntaxException e) {
             e.printStackTrace();
         }
@@ -277,11 +277,6 @@ public class MainController implements Initializable {
         stage.initOwner(currentStage);
         stage.initModality(Modality.WINDOW_MODAL);
         stage.show();
-        TicketController.getInstance().setParameters(ticketSelected, pathSelected);
-    }
-
-
-    private void findSelectedTicket() {
-
+        TicketController.getInstance().setParameters(ticketSelected, pathSelected, paths);
     }
 }
