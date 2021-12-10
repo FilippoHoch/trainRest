@@ -14,6 +14,7 @@ public class Ticket {
     private String departureStation;
     private String arriveStation;
 
+
     public String getDepartureStation() {
         return departureStation;
     }
@@ -120,13 +121,6 @@ public class Ticket {
                 "roadPath=" + roadPath +
                 ", day=" + day +
                 ", aClass=" + aClass +
-                ", totalCost=" + totalCost +
-                ", departureDate=" + departureDate +
-                ", arriveDate=" + arriveDate +
-                ", departureStation='" + departureStation + '\'' +
-                ", arriveStation='" + arriveStation + '\'' +
                 '}';
     }
-
-
 }

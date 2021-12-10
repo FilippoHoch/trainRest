@@ -2,6 +2,8 @@ package main;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -65,17 +67,62 @@ public class LinkManagerController implements Initializable {
 
     @FXML
     void deleteLink(ActionEvent event) {
-
+        Unirest.delete("http://localhost:8090/removeLink?elementNumber=" + viewLink.getSelectionModel().getSelectedIndex()).asString().getBody();
+        // TODO: 08/12/2021 change to better self stage declaration
+        Stage stage = (Stage) linkCost.getScene().getWindow();
+        stage.close();
     }
 
     @FXML
     void newLink(ActionEvent event) {
-
+        linkCost.setDisable(false);
+        pathNumberLink.setDisable(false);
+        arriveStationLink.setDisable(false);
+        startingStationLink.setDisable(false);
+        deleteLinkButton.setDisable(true);
+        saveLinkButton.setDisable(false);
+        labelLinkCost.setDisable(false);
+        labelArriveStation.setDisable(false);
+        labelPathNumber.setDisable(false);
+        labelStartingStation.setDisable(false);
     }
 
     @FXML
     void saveLink(ActionEvent event) {
+        if (deleteLinkButton.isDisable()) {
+            if (linkCost.getText() == "")
+                return;
+            // TODO: 10/12/2021 add control if item of choiceBox is set
+            String url = String.format("http://localhost:8090/addLink?cost=%s&startStation=%s&endStation=%s&pathNumber=%s", linkCost.getText(),stations.get(startingStationLink.getSelectionModel().getSelectedIndex()).getId(),stations.get(arriveStationLink.getSelectionModel().getSelectedIndex()).getId(), paths.get(pathNumberLink.getSelectionModel().getSelectedIndex()).getPathNumber());
+            Unirest.post(url).asString().getBody();
+        } else {
+            String url = "http://localhost:8090/updateLink?elementNumber=" + viewLink.getSelectionModel().getSelectedIndex();
+            if (!linkCost.getText().equalsIgnoreCase(String.valueOf(stations.get(viewLink.getSelectionModel().getSelectedIndex()).getName())))
+                url = url.concat("&className=" + linkCost.getText());
+            if (stations.get(startingStationLink.getSelectionModel().getSelectedIndex()).getId() != links.get(viewLink.getSelectionModel().getSelectedIndex()).getStartStation())
+                url = url.concat("&startStation=" + stations.get(startingStationLink.getSelectionModel().getSelectedIndex()).getId());
+            if (stations.get(arriveStationLink.getSelectionModel().getSelectedIndex()).getId() != links.get(viewLink.getSelectionModel().getSelectedIndex()).getEndStation())
+                url = url.concat("&endStation=" + stations.get(arriveStationLink.getSelectionModel().getSelectedIndex()).getId());
+            if (paths.get(pathNumberLink.getSelectionModel().getSelectedIndex()).getPathNumber() != links.get(viewLink.getSelectionModel().getSelectedIndex()).getPathNumber())
+                url = url.concat("&pathNumber=" + paths.get(pathNumberLink.getSelectionModel().getSelectedIndex()).getPathNumber());
+            Unirest.put(url).asString().getBody();
+        }
+        // TODO: 08/12/2021 change to better self stage declaration
+        Stage stage = (Stage) linkCost.getScene().getWindow();
+        stage.close();
+    }
 
+    void editPath() {
+        linkCost.setDisable(false);
+        pathNumberLink.setDisable(false);
+        arriveStationLink.setDisable(false);
+        startingStationLink.setDisable(false);
+        deleteLinkButton.setDisable(false);
+        saveLinkButton.setDisable(false);
+        labelLinkCost.setDisable(false);
+        labelArriveStation.setDisable(false);
+        labelPathNumber.setDisable(false);
+        labelStartingStation.setDisable(false);
     }
 
     @Override
@@ -85,9 +132,9 @@ public class LinkManagerController implements Initializable {
         String jsonStations = Unirest.get("http://localhost:8090/stations").asString().getBody();
 
         try {
-            links = om.readerForListOf(Class.class).readValue(jsonLinks);
-            paths = om.readerForListOf(Class.class).readValue(jsonPaths);
-            stations = om.readerForListOf(Class.class).readValue(jsonStations);
+            links = om.readerForListOf(Link.class).readValue(jsonLinks);
+            paths = om.readerForListOf(Path.class).readValue(jsonPaths);
+            stations = om.readerForListOf(Station.class).readValue(jsonStations);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
@@ -108,5 +155,12 @@ public class LinkManagerController implements Initializable {
             startingStationLink.getItems().add(station.getName());
             arriveStationLink.getItems().add(station.getName());
         }
+
+        viewLink.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observableValue, Number number, Number number2) {
+                editPath();
+            }
+        });
     }
 }

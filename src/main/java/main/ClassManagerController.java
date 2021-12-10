@@ -2,6 +2,8 @@ package main;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -13,7 +15,6 @@ import javafx.stage.Stage;
 import kong.unirest.Unirest;
 
 import java.net.URL;
-import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -52,32 +53,52 @@ public class ClassManagerController implements Initializable {
 
     @FXML
     void deleteClass(ActionEvent event) {
-
+        Unirest.delete("http://localhost:8090/removeClass?elementNumber=" + viewClass.getSelectionModel().getSelectedIndex()).asString().getBody();
+        // TODO: 08/12/2021 change to better self stage declaration
+        Stage stage = (Stage) classMultiplier.getScene().getWindow();
+        stage.close();
     }
 
     @FXML
     void newClass(ActionEvent event) {
         className.setDisable(false);
         classMultiplier.setDisable(false);
-        viewClass.setDisable(true);
+        saveClassButton.setDisable(false);
+        labelMultiplier.setDisable(false);
+        labelClassNumber.setDisable(false);
     }
 
-    @FXML
-    void editClass(ActionEvent event){
+
+    void editClass() {
         className.setDisable(false);
         classMultiplier.setDisable(false);
         saveClassButton.setDisable(false);
         deleteClassButton.setDisable(false);
-        className.setText(viewClass.getValue());
-        classMultiplier.setText(String.valueOf(classes.get(Integer.parseInt(viewClass.getValue())).getClassNumber()));
+        labelClassNumber.setDisable(false);
+        labelMultiplier.setDisable(false);
+        className.setText(String.valueOf(classes.get(viewClass.getSelectionModel().getSelectedIndex()).getClassNumber()));
+        classMultiplier.setText(String.valueOf(classes.get(viewClass.getSelectionModel().getSelectedIndex()).getMultiplier()));
     }
 
 
     @FXML
     void saveClass(ActionEvent event) {
-        String url = "http://localhost:8090/updateClass?elementNumber=" + viewClass.getId();
-//        if()
-        Unirest.put(url).asString().getBody();
+        if (deleteClassButton.isDisable()) {
+            if (className.getText() == "")
+                return;
+            if (classMultiplier.getText() == "")
+                return;
+            String url = String.format("http://localhost:8090/addClass?classNumber=%s&multiplayer=%s", className.getText(), classMultiplier.getText());
+            Unirest.post(url).asString().getBody();
+        } else {
+            String url = "http://localhost:8090/updateClass?elementNumber=" + viewClass.getSelectionModel().getSelectedIndex();
+            if (!className.getText().equalsIgnoreCase(String.valueOf(classes.get(viewClass.getSelectionModel().getSelectedIndex()).getClassNumber())))
+                url = url.concat("&className=" + className.getText());
+            if (!classMultiplier.getText().equalsIgnoreCase(String.valueOf(classes.get(viewClass.getSelectionModel().getSelectedIndex()).getMultiplier())))
+                url = url.concat("&multiplayer=" + classMultiplier.getText());
+            System.out.println(url);
+            Unirest.put(url).asString().getBody();
+        }
         // TODO: 08/12/2021 change to better self stage declaration
         Stage stage = (Stage) classMultiplier.getScene().getWindow();
         stage.close();
@@ -97,5 +118,12 @@ public class ClassManagerController implements Initializable {
         for (Class aClass : classes) {
             viewClass.getItems().add(String.valueOf(aClass.getClassNumber()));
         }
+
+        viewClass.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observableValue, Number number, Number number2) {
+                editClass();
+            }
+        });
     }
 }

@@ -13,6 +13,12 @@ import java.io.IOException;
 public class EditDatabaseController {
 
 
+    // TODO: 10/12/2021 non vengono aggiunti i biglietti
+    // TODO: 10/12/2021 il put dei biglietti non aggiorna la data
+    // TODO: 10/12/2021 add station non funziona
+    // TODO: 10/12/2021 path update non funziona
+    // TODO: 10/12/2021 add path non funziona
+
 
     @FXML // fx:id="editDatabaseLabel"
     private Label editDatabaseLabel; // Value injected by FXMLLoader

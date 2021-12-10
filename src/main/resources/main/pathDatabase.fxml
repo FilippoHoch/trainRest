@@ -1,55 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ChoiceBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.Font?>
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="259.0" prefWidth="496.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.PathManagerController">
-   <children>
-      <Label layoutX="213.0" layoutY="25.0" text="Path manager">
-         <font>
-            <Font name="System Bold" size="12.0" />
-         </font>
-      </Label>
-      <Button layoutX="304.0" layoutY="224.0" mnemonicParsing="false" onAction="#cancelEditPath" text="Annulla" />
-      <Button fx:id="savePathButton" disable="true" layoutX="438.0" layoutY="224.0" mnemonicParsing="false" onAction="#savePath" text="Salva" />
-      <Button fx:id="deletePathButton" disable="true" layoutX="369.0" layoutY="224.0" mnemonicParsing="false" onAction="#deletePath" text="Cancella" />
-      <Label fx:id="labelPathName" disable="true" layoutX="14.0" layoutY="74.0" text="Nome:" />
-      <Label fx:id="labelStartingPath" disable="true" layoutX="182.0" layoutY="75.0" text="Ora partenza:" />
-      <Label fx:id="labelArrivingPath" disable="true" layoutX="304.0" layoutY="75.0" text="Ora arrivo:" />
-      <Button layoutX="14.0" layoutY="21.0" mnemonicParsing="false" onAction="#newPath" text="Nuovo" />
-      <ChoiceBox fx:id="viewPath" layoutX="74.0" layoutY="21.0" prefHeight="26.0" prefWidth="81.0" />
-      <TextField fx:id="pathName" disable="true" layoutX="12.0" layoutY="102.0" />
-      <TextField fx:id="pathDepartureTimeHour" disable="true" layoutX="179.0" layoutY="107.0" prefHeight="26.0" prefWidth="34.0" />
-      <Label fx:id="labelTwoPoints1" disable="true" layoutX="217.0" layoutY="111.0" text=":" />
-      <TextField fx:id="pathDepartureTimeMinutes" disable="true" layoutX="223.0" layoutY="107.0" prefHeight="26.0" prefWidth="34.0" />
-      <TextField fx:id="pathArriveTimeHour" disable="true" layoutX="304.0" layoutY="107.0" prefHeight="26.0" prefWidth="34.0" />
-      <TextField fx:id="pathArriveTimeMinutes" disable="true" layoutX="348.0" layoutY="107.0" prefHeight="26.0" prefWidth="34.0" />
-      <Label fx:id="labelTwoPoints2" disable="true" layoutX="342.0" layoutY="111.0" text=":" />
-      <Label fx:id="labelPathSeats" disable="true" layoutX="12.0" layoutY="159.0" text="Posti:" />
-      <Label fx:id="labelStartingPathHours" disable="true" layoutX="189.0" layoutY="93.0" text="Ora">
-         <font>
-            <Font size="8.0" />
-         </font>
-      </Label>
-      <Label fx:id="labelStartingPathMinutes" disable="true" layoutX="228.0" layoutY="93.0" text="Minuti">
-         <font>
-            <Font size="8.0" />
-         </font>
-      </Label>
-      <Label fx:id="labelArrivingPathHours" disable="true" layoutX="314.0" layoutY="93.0" text="Ora">
-         <font>
-            <Font size="8.0" />
-         </font>
-      </Label>
-      <Label fx:id="labelArrivingPathMinutes" disable="true" layoutX="353.0" layoutY="93.0" text="Minuti">
-         <font>
-            <Font size="8.0" />
-         </font>
-      </Label>
-      <TextField fx:id="pathSeats" disable="true" layoutX="12.0" layoutY="177.0" />
-   </children>
+<?import javafx.scene.text.*?>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="259.0"
+            prefWidth="496.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="main.PathManagerController">
+    <children>
+        <Label layoutX="213.0" layoutY="25.0" text="Path manager">
+            <font>
+                <Font name="System Bold" size="12.0"/>
+            </font>
+        </Label>
+        <Button layoutX="304.0" layoutY="224.0" mnemonicParsing="false" onAction="#cancelEditPath" text="Annulla"/>
+        <Button fx:id="savePathButton" disable="true" layoutX="438.0" layoutY="224.0" mnemonicParsing="false"
+                onAction="#savePath" text="Salva"/>
+        <Button fx:id="deletePathButton" disable="true" layoutX="369.0" layoutY="224.0" mnemonicParsing="false"
+                onAction="#deletePath" text="Cancella"/>
+        <Label fx:id="labelPathName" disable="true" layoutX="14.0" layoutY="74.0" text="Nome:"/>
+        <Label fx:id="labelStartingPath" disable="true" layoutX="182.0" layoutY="75.0" text="Ora partenza:"/>
+        <Label fx:id="labelArrivingPath" disable="true" layoutX="304.0" layoutY="75.0" text="Ora arrivo:"/>
+        <Button layoutX="14.0" layoutY="21.0" mnemonicParsing="false" onAction="#newPath" text="Nuovo"/>
+        <ChoiceBox fx:id="viewPath" layoutX="74.0" layoutY="21.0" prefHeight="26.0" prefWidth="81.0"/>
+        <TextField fx:id="pathName" disable="true" layoutX="12.0" layoutY="102.0"/>
+        <TextField fx:id="pathDepartureTimeHour" disable="true" layoutX="179.0" layoutY="107.0" prefHeight="26.0"
+                   prefWidth="34.0"/>
+        <Label fx:id="labelTwoPoints1" disable="true" layoutX="217.0" layoutY="111.0" text=":"/>
+        <TextField fx:id="pathDepartureTimeMinutes" disable="true" layoutX="223.0" layoutY="107.0" prefHeight="26.0"
+                   prefWidth="34.0"/>
+        <TextField fx:id="pathArriveTimeHour" disable="true" layoutX="304.0" layoutY="107.0" prefHeight="26.0"
+                   prefWidth="34.0"/>
+        <TextField fx:id="pathArriveTimeMinutes" disable="true" layoutX="348.0" layoutY="107.0" prefHeight="26.0"
+                   prefWidth="34.0"/>
+        <Label fx:id="labelTwoPoints2" disable="true" layoutX="342.0" layoutY="111.0" text=":"/>
+        <Label fx:id="labelPathSeats" disable="true" layoutX="12.0" layoutY="159.0" text="Posti:"/>
+        <Label fx:id="labelStartingPathHours" disable="true" layoutX="189.0" layoutY="93.0" text="Ora">
+            <font>
+                <Font size="8.0"/>
+            </font>
+        </Label>
+        <Label fx:id="labelStartingPathMinutes" disable="true" layoutX="228.0" layoutY="93.0" text="Minuti">
+            <font>
+                <Font size="8.0"/>
+            </font>
+        </Label>
+        <Label fx:id="labelArrivingPathHours" disable="true" layoutX="314.0" layoutY="93.0" text="Ora">
+            <font>
+                <Font size="8.0"/>
+            </font>
+        </Label>
+        <Label fx:id="labelArrivingPathMinutes" disable="true" layoutX="353.0" layoutY="93.0" text="Minuti">
+            <font>
+                <Font size="8.0"/>
+            </font>
+        </Label>
+        <TextField fx:id="pathSeats" disable="true" layoutX="12.0" layoutY="177.0"/>
+    </children>
 </AnchorPane>

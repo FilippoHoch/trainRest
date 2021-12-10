@@ -4,12 +4,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import main.managers.LinkManager;
 import main.managers.PathFinder;
 import main.managers.StationManager;
+import spark.Request;
 
+import java.awt.*;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import static spark.Spark.*;
 
@@ -34,6 +40,7 @@ public class ServerRest {
     // TODO: 08/12/2021 change style of the fxml
     // TODO: 08/12/2021 check javaDoc and insert comments line
     // TODO: 08/12/2021 Optimize the code (Disable almost all warnings)
+
 
     // Da fare dopo venerdì
     // TODO: 08/12/2021 finish the Postman configuration
@@ -98,7 +105,17 @@ public class ServerRest {
         // Start embedded server at this port
         port(8090);
 
+        get("/help", ((request, response) -> {
+            try {
+                Desktop.getDesktop().browse(new URL("https://github.com/FilippoHoch/trainRest").toURI());
+            } catch (IOException | URISyntaxException e) {
+                e.printStackTrace();
+            }
+            return "Redirect";
+        }));
+
         put("/updateTicket", (((request, response) -> {
+            printRequest(request);
             if (!request.queryParams().contains("elementNumber"))
                 return "Missing element number";
             if (request.queryParams().contains("roadPath"))
@@ -111,11 +128,13 @@ public class ServerRest {
         })));
 
         post("/addTicket", (((request, response) -> {
+            printRequest(request);
             tickets.add(new Ticket(Integer.parseInt(request.queryParams("roadPath")), Utility.stringToDate(request.queryParams("day")), classes.get(Integer.parseInt(request.queryParams("classNumber")))));
             return "Ticket Added";
         })));
 
         delete("/removeTicket", (((request, response) -> {
+            printRequest(request);
             if (request.queryParams().contains("elementNumber")) {
                 tickets.remove(Integer.parseInt(request.queryParams("elementNumber")));
                 return "Ticket Removed";
@@ -124,6 +143,7 @@ public class ServerRest {
         })));
 
         put("/updatePath", (((request, response) -> {
+            printRequest(request);
             if (!request.queryParams().contains("elementNumber"))
                 return "Missing element number";
             if (request.queryParams().contains("pathName"))
@@ -138,12 +158,13 @@ public class ServerRest {
         })));
 
         post("/addPath", (((request, response) -> {
-            paths.add(new Path(paths.size(), request.queryParams("pathName"), Utility.stringToDate(request.queryParams("startDate")), Utility.stringToDate(request.queryParams("endDate")), Integer.parseInt(request.queryParams("seats"))));
+            System.out.println(request.queryParams("startDate"));
+            paths.add(new Path(paths.size(), request.queryParams("pathName"), Utility.stringToDateTime(request.queryParams("startDate")), Utility.stringToDateTime(request.queryParams("endDate")), Integer.parseInt(request.queryParams("seats"))));
             return "Path Added";
         })));
 
         delete("/removePath", (((request, response) -> {
-
+            printRequest(request);
             if (request.queryParams().contains("elementNumber")) {
                 paths.remove(Integer.parseInt(request.queryParams("elementNumber")));
                 return "Path Removed";
@@ -152,6 +173,7 @@ public class ServerRest {
         })));
 
         put("/updateLink", (((request, response) -> {
+            printRequest(request);
             if (!request.queryParams().contains("elementNumber"))
                 return "Missing element number";
             if (request.queryParams().contains("startStation"))
@@ -167,19 +189,22 @@ public class ServerRest {
 
 
         post("/addLink", (((request, response) -> {
+            printRequest(request);
             linkManager.addLink(new Link(Integer.parseInt(request.queryParams("startStation")), Integer.parseInt(request.queryParams("endStation")), Integer.parseInt(request.queryParams("pathNumber")), Integer.parseInt(request.queryParams("cost"))));
             return "Link Added";
         })));
 
         delete("/removeLink", (((request, response) -> {
+            printRequest(request);
             if (request.queryParams().contains("elementNumber")) {
-                linkManager.getAllLinks().remove(Integer.parseInt(request.queryParams("elementNumber")));
+                linkManager.removeLink(linkManager.getAllLinks().get(Integer.parseInt(request.queryParams("elementNumber"))));
                 return "Link Removed";
             }
             return "Link not found";
         })));
 
         put("/updateStation", (((request, response) -> {
+            printRequest(request);
             if (!request.queryParams().contains("elementNumber"))
                 return "Missing element number";
             if (request.queryParams().contains("stationName"))
@@ -189,11 +214,13 @@ public class ServerRest {
 
 
         post("/addStation", (((request, response) -> {
+            printRequest(request);
             stationManager.addStation(new Station(stationManager.stations.size(), request.queryParams("stationName")));
             return "Station Added";
         })));
 
         delete("/removeStation", (((request, response) -> {
+            printRequest(request);
             if (request.queryParams().contains("elementNumber")) {
                 stationManager.stations.remove(Integer.parseInt(request.queryParams("elementNumber")));
                 return "Station Removed";
@@ -202,21 +229,24 @@ public class ServerRest {
         })));
 
         put("/updateClass", (((request, response) -> {
+            printRequest(request);
             if (!request.queryParams().contains("elementNumber"))
                 return "Missing element number";
             if (request.queryParams().contains("classNumber"))
                 classes.get(Integer.parseInt(request.queryParams("elementNumber"))).setMultiplier(Integer.parseInt(request.queryParams("classNumber")));
             if (request.queryParams().contains("multiplayer"))
-                classes.get(Integer.parseInt(request.queryParams("elementNumber"))).setMultiplier(Integer.parseInt(request.queryParams("multiplayer")));
+                classes.get(Integer.parseInt(request.queryParams("elementNumber"))).setMultiplier(Double.parseDouble(request.queryParams("multiplayer")));
             return "Station Updated";
         })));
 
         post("/addClass", (((request, response) -> {
+            printRequest(request);
             classes.add(new Class(Integer.parseInt(request.queryParams("classNumber")), Integer.parseInt(request.queryParams("multiplayer"))));
             return "Class Added";
         })));
 
         delete("/removeClass", (((request, response) -> {
+            printRequest(request);
             if (request.queryParams().contains("elementNumber")) {
                 classes.remove(Integer.parseInt(request.queryParams("elementNumber")));
                 return "Class Removed";
@@ -225,85 +255,97 @@ public class ServerRest {
         })));
 
         get("/classes", ((request, response) -> {
+            printRequest(request);
             return om.writeValueAsString(classes);
         }));
 
         get("/stations", ((request, response) -> {
+            printRequest(request);
             return om.writeValueAsString(stationManager.getAllStations());
         }));
 
         get("/paths", ((request, response) -> {
+            printRequest(request);
             return om.writeValueAsString(paths);
         }));
 
         get("/links", ((request, response) -> {
+            printRequest(request);
             return om.writeValueAsString(linkManager.getAllLinks());
         }));
 
 
         get("/all", ((request, response) -> {
+            printRequest(request);
             return om.writeValueAsString(tickets);
         }));
 
         get("/tickets", ((request, response) -> {
 
+            printRequest(request);
+            if (request.queryParams().size() != 0) {
 
-            List<Ticket> filteredTickets = new ArrayList<>();
 
-            if (request.queryParams().size() < 6 || request.queryParams().size() > 6)
-                return "Bad request";
+                List<Ticket> filteredTickets = new ArrayList<>();
 
-            String destinationStation = request.queryParams("destinationStation");
-            String arriveTime = request.queryParams("arriveTime");
-            String chosenClass = request.queryParams("chosenClass");
-            String departureTime = request.queryParams("departureTime");
-            String disponibilityPrice = request.queryParams("disponibilityPrice");
-            String startingStation = request.queryParams("startingStation");
+                if (request.queryParams().size() < 6 || request.queryParams().size() > 6)
+                    return "Bad request";
+
+                String destinationStation = request.queryParams("destinationStation");
+                String arriveTime = request.queryParams("arriveTime");
+                String chosenClass = request.queryParams("chosenClass");
+                String departureTime = request.queryParams("departureTime");
+                String disponibilityPrice = request.queryParams("disponibilityPrice");
+                String startingStation = request.queryParams("startingStation");
 
 //            System.out.println(destinationStation + "\n" + arriveTime + "\n" + chosenClass + "\n" + departureTime + "\n" + disponibilityPrice + "\n" + startingStation);
 
-            PathFinder pathFinder = new PathFinder();
-            int start = Integer.parseInt(startingStation), end = Integer.parseInt(destinationStation);
+                PathFinder pathFinder = new PathFinder();
+                int start = Integer.parseInt(startingStation), end = Integer.parseInt(destinationStation);
 
-            Station startStation = stationManager.getStation(start);
-            Station endStation = stationManager.getStation(end);
+                Station startStation = stationManager.getStation(start);
+                Station endStation = stationManager.getStation(end);
 
-            List<Integer> numbers = pathFinder.getPathNumbersThroughStations(start, end, stationManager.getAllStations(), linkManager.getAllLinks());
-            if (numbers.size() == 0) {
-                System.out.print("no paths available");
-            } else {
-                for (int a : numbers) {
-                    System.out.print("path number " + a + " available from " + startStation.getName() + " to " + endStation.getName() + "\n");
-                    for (Path path : paths) {
-                        if (path.getPathNumber() == a) {
-                            path.setStations(pathFinder.getPath(start, end, a, stationManager.getAllStations(), linkManager.getAllLinks()));
-                            path.setLinks(LinkManager.filterLinks(linkManager.getAllLinks(), a));
+                List<Integer> numbers = pathFinder.getPathNumbersThroughStations(start, end, stationManager.getAllStations(), linkManager.getAllLinks());
+                if (numbers.size() == 0) {
+                    System.out.print("no paths available");
+                } else {
+                    for (int a : numbers) {
+                        System.out.print("path number " + a + " available from " + startStation.getName() + " to " + endStation.getName() + "\n");
+                        for (Path path : paths) {
+                            if (path.getPathNumber() == a) {
+                                path.setStations(pathFinder.getPath(start, end, a, stationManager.getAllStations(), linkManager.getAllLinks()));
+                                path.setLinks(LinkManager.filterLinks(linkManager.getAllLinks(), a));
+                            }
                         }
-                    }
-                    for (Ticket ticket : tickets) {
-                        ticket.setTotalCost(LinkManager.filterLinks(linkManager.getAllLinks(), a));
-                        System.out.println("a: " + a + " start: " + start + " end: " + end);
+                        for (Ticket ticket : tickets) {
+                            ticket.setTotalCost(LinkManager.filterLinks(linkManager.getAllLinks(), a));
+                            System.out.println("a: " + a + " start: " + start + " end: " + end);
 
-                        startingTime = startingStationTime(a, start, ticket.getDay());
+                            startingTime = startingStationTime(a, start, ticket.getDay());
 
 
-                        destinationTime = destinationStationTime(a, ticket.getDay());
-                        System.out.println("Starting time: " + startingTime + "\nDestination time: " + destinationTime);
-                        if (ticket.getRoadPath() == a && ticket.getaClass().getClassNumber().toString().equalsIgnoreCase(chosenClass) &&
-                                ticket.getTotalCost() <= Double.parseDouble(disponibilityPrice) && startingTime.getTime() >= Utility.stringToDateTime(departureTime).getTime()
-                                && destinationTime.getTime() <= Utility.stringToDateTime(arriveTime).getTime() && paths.get(a).getSeats() > 0) {
-                            ticket.setDepartureDate(startingTime);
-                            ticket.setArriveDate(destinationTime);
-                            ticket.setDepartureStation(stationManager.getStation(start).getName());
-                            ticket.setArriveStation(stationManager.getStation(end).getName());
-                            filteredTickets.add(ticket);
+                            destinationTime = destinationStationTime(a, ticket.getDay());
+                            System.out.println("Starting time: " + startingTime + "\nDestination time: " + destinationTime);
+                            if (ticket.getRoadPath() == a && ticket.getaClass().getClassNumber().toString().equalsIgnoreCase(chosenClass) &&
+                                    ticket.getTotalCost() <= Double.parseDouble(disponibilityPrice) && startingTime.getTime() >= Utility.stringToDateTime(departureTime).getTime()
+                                    && destinationTime.getTime() <= Utility.stringToDateTime(arriveTime).getTime() && paths.get(a).getSeats() > 0) {
+                                ticket.setDepartureDate(startingTime);
+                                ticket.setArriveDate(destinationTime);
+                                ticket.setDepartureStation(stationManager.getStation(start).getName());
+                                ticket.setArriveStation(stationManager.getStation(end).getName());
+                                filteredTickets.add(ticket);
+                            }
                         }
-                    }
 
+                    }
                 }
+                return om.writeValueAsString(filteredTickets);
+
             }
-            return om.writeValueAsString(filteredTickets);
+            return om.writeValueAsString(tickets);
         }));
+
 
     }
 
@@ -313,14 +355,14 @@ public class ServerRest {
 
     // TODO: 08/12/2021 resolve the date problem (departure and arrive are inverted) and the date isn't right
 
-    public static Date destinationStationTime(int pathNumber, Date day){
+    public static Date destinationStationTime(int pathNumber, Date day) {
 
         Path path = paths.get(pathNumber);
         int time = 0;
         for (int i = 0; i < path.getLinks().size(); i++) {
             for (Station station : path.getStations()) {
-                if(station.getId() == path.getLinks().get(i).getStartStation()) {
-                        time += path.getLinks().get(i).getCost();
+                if (station.getId() == path.getLinks().get(i).getStartStation()) {
+                    time += path.getLinks().get(i).getCost();
 
                 }
             }
@@ -329,16 +371,21 @@ public class ServerRest {
         return new Date(day.getTime() + paths.get(pathNumber).getDepartureTime().getTime() + (time * 60000L));
     }
 
-    public static Date startingStationTime(int pathNumber, int startingStation, Date day){
+    public static Date startingStationTime(int pathNumber, int startingStation, Date day) {
         int startingTime = 0;
         List<Link> pathsLink = paths.get(pathNumber).getLinks();
-        for(int i = 0; i < paths.get(pathNumber).getSizeLinks(); i++){
-            if(pathsLink.get(i).getStartStation() == startingStation)
+        for (int i = 0; i < paths.get(pathNumber).getSizeLinks(); i++) {
+            if (pathsLink.get(i).getStartStation() == startingStation)
                 break;
             startingTime = startingTime + pathsLink.get(i).getCost();
         }
         long dateResult = startingTime * 60000L + day.getTime() + paths.get(pathNumber).getDepartureTime().getTime();
         return new Date(dateResult);
+    }
+
+
+    void printRequest(Request request){
+
     }
 
     public static void main(String[] args) {

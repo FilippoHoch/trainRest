@@ -56,4 +56,9 @@ public class LinkManager {
         }
         return pathNumbers;
     }
+
+    public void removeLink(Link link){
+        int key = link.getStartStation();
+        links.get(key).remove(link);
+    }
 }

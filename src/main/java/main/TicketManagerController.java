@@ -2,6 +2,8 @@ package main;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -10,7 +12,9 @@ import javafx.stage.Stage;
 import kong.unirest.Unirest;
 
 import java.net.URL;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -18,6 +22,7 @@ public class TicketManagerController implements Initializable {
     ObjectMapper om = new ObjectMapper();
     List<Ticket> tickets = new ArrayList<>();
     List<Class> classes = new ArrayList<>();
+    List<Path> paths = new ArrayList<>();
 
     @FXML
     private Button deleteTicketButton;
@@ -29,7 +34,7 @@ public class TicketManagerController implements Initializable {
     private Label labelTicketDay;
 
     @FXML
-    private Label labelTicketName;
+    private Label labelRoadPath;
 
     @FXML
     private Button saveTicketButton;
@@ -41,7 +46,7 @@ public class TicketManagerController implements Initializable {
     private DatePicker ticketDay;
 
     @FXML
-    private TextField ticketName;
+    private ChoiceBox<String> ticketRoadPath;
 
     @FXML
     private ChoiceBox<String> viewTicket;
@@ -49,46 +54,100 @@ public class TicketManagerController implements Initializable {
     @FXML
     void cancelEditTicket(ActionEvent event) {
         // TODO: 08/12/2021 change to better self stage declaration
-        Stage stage = (Stage) ticketName.getScene().getWindow();
+        Stage stage = (Stage) labelRoadPath.getScene().getWindow();
         stage.close();
     }
 
     @FXML
     void deleteTicket(ActionEvent event) {
-
+        Unirest.delete("http://localhost:8090/removeTicket?elementNumber=" + viewTicket.getSelectionModel().getSelectedIndex()).asString().getBody();
+        // TODO: 08/12/2021 change to better self stage declaration
+        Stage stage = (Stage) labelRoadPath.getScene().getWindow();
+        stage.close();
     }
 
     @FXML
     void newTicket(ActionEvent event) {
-
+        ticketRoadPath.setDisable(false);
+        ticketClass.setDisable(false);
+        ticketDay.setDisable(false);
+        deleteTicketButton.setDisable(true);
+        saveTicketButton.setDisable(false);
+        labelTicketClass.setDisable(false);
+        labelTicketDay.setDisable(false);
+        labelRoadPath.setDisable(false);
     }
 
     @FXML
     void saveTicket(ActionEvent event) {
+        if (deleteTicketButton.isDisable()) {
+            if (ticketDay.getValue() == null)
+                return;
+            // TODO: 10/12/2021 add control if item of choiceBox is set
+            String url = String.format("http://localhost:8090/addTicket?roadPath=%s&day=%s&classNumber=%s", paths.get(ticketRoadPath.getSelectionModel().getSelectedIndex()).getPathNumber(), Utility.stringToDateTime(ticketDay.getValue().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))+ "-00:00").getTime(),classes.get(ticketClass.getSelectionModel().getSelectedIndex()).getClassNumber());
+            Unirest.post(url).asString().getBody();
+        } else {
+            String url = "http://localhost:8090/updateTicket?elementNumber=" + viewTicket.getSelectionModel().getSelectedIndex();
+            if (paths.get(ticketRoadPath.getSelectionModel().getSelectedIndex()).getPathNumber() != tickets.get(viewTicket.getSelectionModel().getSelectedIndex()).getRoadPath())
+                url = url.concat("&roadPath=" + paths.get(ticketRoadPath.getSelectionModel().getSelectedIndex()).getPathNumber());
+            if ((Utility.stringToDateTime(ticketDay.getValue().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))+ "-00:00")).getTime() != tickets.get(viewTicket.getSelectionModel().getSelectedIndex()).getDay().getTime())
+                url = url.concat("&day=" + Utility.stringToDateTime(ticketDay.getValue().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))+ "-00:00").getTime());
+            if (classes.get(ticketClass.getSelectionModel().getSelectedIndex()).getClassNumber() != tickets.get(viewTicket.getSelectionModel().getSelectedIndex()).getaClass().getClassNumber())
+                url = url.concat("&classNumber=" + classes.get(ticketClass.getSelectionModel().getSelectedIndex()).getClassNumber());
+            Unirest.put(url).asString().getBody();
+        }
+        // TODO: 08/12/2021 change to better self stage declaration
+        Stage stage = (Stage) labelRoadPath.getScene().getWindow();
+        stage.close();
+    }
 
+    void editPath() {
+        ticketRoadPath.setDisable(false);
+        ticketClass.setDisable(false);
+        ticketDay.setDisable(false);
+        deleteTicketButton.setDisable(false);
+        saveTicketButton.setDisable(false);
+        labelTicketClass.setDisable(false);
+        labelTicketDay.setDisable(false);
+        labelRoadPath.setDisable(false);
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         String jsonTickets = Unirest.get("http://localhost:8090/tickets").asString().getBody();
         String jsonClasses = Unirest.get("http://localhost:8090/classes").asString().getBody();
+        String jsonPaths = Unirest.get("http://localhost:8090/paths").asString().getBody();
 
         try {
-            tickets = om.readerForListOf(Class.class).readValue(jsonTickets);
+            tickets = om.readerForListOf(Ticket.class).readValue(jsonTickets);
             classes = om.readerForListOf(Class.class).readValue(jsonClasses);
+            paths = om.readerForListOf(Path.class).readValue(jsonPaths);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
 
         assert tickets != null;
         for (Ticket ticket : tickets) {
-            viewTicket.getItems().add("linea: " + ticket.getRoadPath() + " alle " + ticket.getDepartureDate() +" da " + ticket.getDepartureStation());
+            List<String> day = Utility.dateToList(ticket.getDay());
+            viewTicket.getItems().add("linea: " + ticket.getRoadPath() + ", Classe:" + ticket.getaClass().getClassNumber() + ", del " + day.get(0) + "/" + day.get(1) + "/" + day.get(2));
         }
 
         assert classes != null;
         for (Class aClass : classes) {
             ticketClass.getItems().add(String.valueOf(aClass.getClassNumber()));
         }
+
+        assert paths != null;
+        for (Path path : paths) {
+            ticketRoadPath.getItems().add(String.valueOf(path.getPathNumber()));
+        }
+
+        viewTicket.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observableValue, Number number, Number number2) {
+                editPath();
+            }
+        });
 
     }
 }

@@ -29,7 +29,8 @@ public class Path {
     }
 
     public void setLinks(List<Link> links) {
-        setSizeLinks(links.size());
+        if (links != null)
+            setSizeLinks(links.size());
         this.links = links;
     }
 

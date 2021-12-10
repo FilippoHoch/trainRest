@@ -1,15 +1,11 @@
 package main;
 
-import javafx.stage.Stage;
-
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import static main.ServerRest.tickets;
 
 public class Utility {
 
@@ -82,7 +78,7 @@ public class Utility {
     }
 
 
-    public static List<String> dateToList(Date date){
+    public static List<String> dateToList(Date date) {
         List<String> dateList = new ArrayList<>();
         dateList.add(date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime().format(DateTimeFormatter.ofPattern("dd")));
         dateList.add(date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime().format(DateTimeFormatter.ofPattern("MM")));
