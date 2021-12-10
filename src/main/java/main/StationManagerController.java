@@ -40,7 +40,7 @@ public class StationManagerController implements Initializable {
 
     @FXML
     void cancelEditStation(ActionEvent event) {
-        // TODO: 08/12/2021 change to better self stage declaration
+        
         Stage stage = (Stage) stationName.getScene().getWindow();
         stage.close();
     }
@@ -48,7 +48,7 @@ public class StationManagerController implements Initializable {
     @FXML
     void deleteStation(ActionEvent event) {
         Unirest.delete("http://localhost:8090/removeStation?elementNumber=" + viewStation.getSelectionModel().getSelectedIndex()).asString().getBody();
-        // TODO: 08/12/2021 change to better self stage declaration
+        
         Stage stage = (Stage) stationName.getScene().getWindow();
         stage.close();
     }
@@ -66,15 +66,15 @@ public class StationManagerController implements Initializable {
         if (deleteStationButton.isDisable()) {
             if (stationName.getText() == "")
                 return;
-            String url = String.format("http://localhost:8090/addStation?statioName=%s", stationName.getText());
+            String url = String.format("http://localhost:8090/addStation?stationName=%s", stationName.getText());
             Unirest.post(url).asString().getBody();
         } else {
             String url = "http://localhost:8090/updateStation?elementNumber=" + viewStation.getSelectionModel().getSelectedIndex();
             if (!stationName.getText().equalsIgnoreCase(String.valueOf(stations.get(viewStation.getSelectionModel().getSelectedIndex()).getName())))
-                url = url.concat("&className=" + stationName.getText());
+                url = url.concat("&stationName=" + stationName.getText());
             Unirest.put(url).asString().getBody();
         }
-        // TODO: 08/12/2021 change to better self stage declaration
+        
         Stage stage = (Stage) stationName.getScene().getWindow();
         stage.close();
     }
@@ -84,6 +84,7 @@ public class StationManagerController implements Initializable {
         deleteStationButton.setDisable(false);
         labelStationName.setDisable(false);
         saveStationButton.setDisable(false);
+        stationName.setText(stations.get(viewStation.getSelectionModel().getSelectedIndex()).getName());
     }
 
     @Override

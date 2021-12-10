@@ -7,14 +7,16 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import kong.unirest.Unirest;
 
 import java.net.URL;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -53,7 +55,7 @@ public class TicketManagerController implements Initializable {
 
     @FXML
     void cancelEditTicket(ActionEvent event) {
-        // TODO: 08/12/2021 change to better self stage declaration
+        
         Stage stage = (Stage) labelRoadPath.getScene().getWindow();
         stage.close();
     }
@@ -61,7 +63,7 @@ public class TicketManagerController implements Initializable {
     @FXML
     void deleteTicket(ActionEvent event) {
         Unirest.delete("http://localhost:8090/removeTicket?elementNumber=" + viewTicket.getSelectionModel().getSelectedIndex()).asString().getBody();
-        // TODO: 08/12/2021 change to better self stage declaration
+        
         Stage stage = (Stage) labelRoadPath.getScene().getWindow();
         stage.close();
     }
@@ -83,20 +85,25 @@ public class TicketManagerController implements Initializable {
         if (deleteTicketButton.isDisable()) {
             if (ticketDay.getValue() == null)
                 return;
-            // TODO: 10/12/2021 add control if item of choiceBox is set
-            String url = String.format("http://localhost:8090/addTicket?roadPath=%s&day=%s&classNumber=%s", paths.get(ticketRoadPath.getSelectionModel().getSelectedIndex()).getPathNumber(), Utility.stringToDateTime(ticketDay.getValue().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))+ "-00:00").getTime(),classes.get(ticketClass.getSelectionModel().getSelectedIndex()).getClassNumber());
+            if (ticketClass.getValue() == null)
+                return;
+            if (ticketRoadPath.getValue() == null)
+                return;
+            String url = String.format("http://localhost:8090/addTicket?roadPath=%s&day=%s&classNumber=%s", paths.get(ticketRoadPath.getSelectionModel().getSelectedIndex()).getPathNumber(), Utility.stringToDateTime(ticketDay.getValue().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + "-00:00").getTime(), classes.get(ticketClass.getSelectionModel().getSelectedIndex()).getClassNumber() - 1);
             Unirest.post(url).asString().getBody();
         } else {
             String url = "http://localhost:8090/updateTicket?elementNumber=" + viewTicket.getSelectionModel().getSelectedIndex();
             if (paths.get(ticketRoadPath.getSelectionModel().getSelectedIndex()).getPathNumber() != tickets.get(viewTicket.getSelectionModel().getSelectedIndex()).getRoadPath())
                 url = url.concat("&roadPath=" + paths.get(ticketRoadPath.getSelectionModel().getSelectedIndex()).getPathNumber());
-            if ((Utility.stringToDateTime(ticketDay.getValue().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))+ "-00:00")).getTime() != tickets.get(viewTicket.getSelectionModel().getSelectedIndex()).getDay().getTime())
-                url = url.concat("&day=" + Utility.stringToDateTime(ticketDay.getValue().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))+ "-00:00").getTime());
+            if ((Utility.stringToDateTime(ticketDay.getValue().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + "-00:00")).getTime() != tickets.get(viewTicket.getSelectionModel().getSelectedIndex()).getDay().getTime())
+                url = url.concat("&day=" + Utility.stringToDateTime(ticketDay.getValue().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + "-00:00").getTime());
             if (classes.get(ticketClass.getSelectionModel().getSelectedIndex()).getClassNumber() != tickets.get(viewTicket.getSelectionModel().getSelectedIndex()).getaClass().getClassNumber())
                 url = url.concat("&classNumber=" + classes.get(ticketClass.getSelectionModel().getSelectedIndex()).getClassNumber());
             Unirest.put(url).asString().getBody();
         }
-        // TODO: 08/12/2021 change to better self stage declaration
+
+
+        
         Stage stage = (Stage) labelRoadPath.getScene().getWindow();
         stage.close();
     }
@@ -110,6 +117,10 @@ public class TicketManagerController implements Initializable {
         labelTicketClass.setDisable(false);
         labelTicketDay.setDisable(false);
         labelRoadPath.setDisable(false);
+        ticketClass.setValue(String.valueOf(tickets.get(viewTicket.getSelectionModel().getSelectedIndex()).getaClass().getClassNumber()));
+        ticketRoadPath.setValue(String.valueOf(tickets.get(viewTicket.getSelectionModel().getSelectedIndex()).getRoadPath()));
+        ticketDay.setValue(Utility.convertToLocalDateViaInstant(tickets.get(viewTicket.getSelectionModel().getSelectedIndex()).getDay()));
+
     }
 
     @Override

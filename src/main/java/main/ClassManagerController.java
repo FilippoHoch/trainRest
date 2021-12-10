@@ -46,7 +46,6 @@ public class ClassManagerController implements Initializable {
 
     @FXML
     void cancelEditClass(ActionEvent event) {
-        // TODO: 08/12/2021 change to better self stage declaration
         Stage stage = (Stage) classMultiplier.getScene().getWindow();
         stage.close();
     }
@@ -54,7 +53,6 @@ public class ClassManagerController implements Initializable {
     @FXML
     void deleteClass(ActionEvent event) {
         Unirest.delete("http://localhost:8090/removeClass?elementNumber=" + viewClass.getSelectionModel().getSelectedIndex()).asString().getBody();
-        // TODO: 08/12/2021 change to better self stage declaration
         Stage stage = (Stage) classMultiplier.getScene().getWindow();
         stage.close();
     }
@@ -78,6 +76,7 @@ public class ClassManagerController implements Initializable {
         labelMultiplier.setDisable(false);
         className.setText(String.valueOf(classes.get(viewClass.getSelectionModel().getSelectedIndex()).getClassNumber()));
         classMultiplier.setText(String.valueOf(classes.get(viewClass.getSelectionModel().getSelectedIndex()).getMultiplier()));
+
     }
 
 
@@ -99,7 +98,6 @@ public class ClassManagerController implements Initializable {
             System.out.println(url);
             Unirest.put(url).asString().getBody();
         }
-        // TODO: 08/12/2021 change to better self stage declaration
         Stage stage = (Stage) classMultiplier.getScene().getWindow();
         stage.close();
     }

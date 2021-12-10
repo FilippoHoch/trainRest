@@ -12,6 +12,9 @@ public class LinkManager {
         return filterLinks(links.get(station.getId()), pathNumber);
     }
 
+    public List<Link> getLinks(int pathNumber) {
+        return filterLinks(getAllLinks(), pathNumber);
+    }
 
     public List<Link> getLinks(Station station) {
         return links.get(station.getId());
@@ -57,7 +60,7 @@ public class LinkManager {
         return pathNumbers;
     }
 
-    public void removeLink(Link link){
+    public void removeLink(Link link) {
         int key = link.getStartStation();
         links.get(key).remove(link);
     }

@@ -96,9 +96,6 @@ public class SearchController implements Initializable {
             chosenClass.getItems().add(aClass.getClassNumber());
         }
 
-
-        System.out.println("\n Le stazioni sono: \n" + stations + "\n Le classi sono: \n" + classes);
-
     }
 
     @FXML
@@ -110,7 +107,6 @@ public class SearchController implements Initializable {
     @FXML
     void findTickets(ActionEvent event) {
         if (checkParameters()) {
-            // TODO: 08/12/2021 change to better self stage declaration
             Stage stage = (Stage) cancel.getScene().getWindow();
 
             MainController.getInstance().setSearch(true);
@@ -177,6 +173,12 @@ public class SearchController implements Initializable {
         if (arriveTimeMinutes.getText().length() < 2) {
             arriveTimeMinutes.setText("0" + arriveTimeMinutes.getText());
         }
+        if (startingStation.getValue() == null)
+            return false;
+        if (destinationStation.getValue() == null)
+            return false;
+        if (chosenClass.getValue() == null)
+            return false;
         return true;
     }
 }

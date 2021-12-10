@@ -60,7 +60,6 @@ public class LinkManagerController implements Initializable {
 
     @FXML
     void cancelEditLink(ActionEvent event) {
-        // TODO: 08/12/2021 change to better self stage declaration
         Stage stage = (Stage) linkCost.getScene().getWindow();
         stage.close();
     }
@@ -68,7 +67,6 @@ public class LinkManagerController implements Initializable {
     @FXML
     void deleteLink(ActionEvent event) {
         Unirest.delete("http://localhost:8090/removeLink?elementNumber=" + viewLink.getSelectionModel().getSelectedIndex()).asString().getBody();
-        // TODO: 08/12/2021 change to better self stage declaration
         Stage stage = (Stage) linkCost.getScene().getWindow();
         stage.close();
     }
@@ -92,8 +90,13 @@ public class LinkManagerController implements Initializable {
         if (deleteLinkButton.isDisable()) {
             if (linkCost.getText() == "")
                 return;
-            // TODO: 10/12/2021 add control if item of choiceBox is set
-            String url = String.format("http://localhost:8090/addLink?cost=%s&startStation=%s&endStation=%s&pathNumber=%s", linkCost.getText(),stations.get(startingStationLink.getSelectionModel().getSelectedIndex()).getId(),stations.get(arriveStationLink.getSelectionModel().getSelectedIndex()).getId(), paths.get(pathNumberLink.getSelectionModel().getSelectedIndex()).getPathNumber());
+            if (pathNumberLink.getValue() == null)
+                return;
+            if (startingStationLink.getValue() == null)
+                return;
+            if (arriveStationLink.getValue() == null)
+                return;
+            String url = String.format("http://localhost:8090/addLink?cost=%s&startStation=%s&endStation=%s&pathNumber=%s", linkCost.getText(), stations.get(startingStationLink.getSelectionModel().getSelectedIndex()).getId(), stations.get(arriveStationLink.getSelectionModel().getSelectedIndex()).getId(), paths.get(pathNumberLink.getSelectionModel().getSelectedIndex()).getPathNumber());
             Unirest.post(url).asString().getBody();
         } else {
             String url = "http://localhost:8090/updateLink?elementNumber=" + viewLink.getSelectionModel().getSelectedIndex();
@@ -107,7 +110,6 @@ public class LinkManagerController implements Initializable {
                 url = url.concat("&pathNumber=" + paths.get(pathNumberLink.getSelectionModel().getSelectedIndex()).getPathNumber());
             Unirest.put(url).asString().getBody();
         }
-        // TODO: 08/12/2021 change to better self stage declaration
         Stage stage = (Stage) linkCost.getScene().getWindow();
         stage.close();
     }
@@ -123,6 +125,11 @@ public class LinkManagerController implements Initializable {
         labelArriveStation.setDisable(false);
         labelPathNumber.setDisable(false);
         labelStartingStation.setDisable(false);
+        linkCost.setText(String.valueOf(links.get(viewLink.getSelectionModel().getSelectedIndex()).getCost()));
+        pathNumberLink.setValue(String.valueOf(links.get(viewLink.getSelectionModel().getSelectedIndex()).getPathNumber()));
+        startingStationLink.setValue(String.valueOf(links.get(viewLink.getSelectionModel().getSelectedIndex()).getStartStation()));
+        arriveStationLink.setValue(String.valueOf(links.get(viewLink.getSelectionModel().getSelectedIndex()).getEndStation()));
+
     }
 
     @Override
@@ -142,7 +149,7 @@ public class LinkManagerController implements Initializable {
 
         assert links != null;
         for (Link link : links) {
-            viewLink.getItems().add("Da " + link.getStartStation() + " a " + link.getEndStation());
+            viewLink.getItems().add("Da " + link.getStartStation() + " a " + link.getEndStation() + " - " + link.getPathNumber());
         }
 
         assert paths != null;

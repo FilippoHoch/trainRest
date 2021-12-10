@@ -4,6 +4,7 @@
 
 package main;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -14,12 +15,11 @@ import javafx.scene.control.ListView;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import kong.unirest.Unirest;
+import main.managers.LinkManager;
+import main.managers.StationManager;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class TicketController implements Initializable {
 
@@ -33,7 +33,6 @@ public class TicketController implements Initializable {
     @FXML // fx:id="listViewStation"
     private ListView<String> listViewStation; // Value injected by FXMLLoader
 
-    // TODO: 08/12/2021 Add logo of the campaign of the train
     @FXML // fx:id="logo"
     private ImageView logo; // Value injected by FXMLLoader
 
@@ -73,10 +72,52 @@ public class TicketController implements Initializable {
         int time = 0;
         Date startingDate = ticket.getDepartureDate();
 
-        for (int i = 0; i < path.getLinks().size(); i++) {
-            for (Station station : path.getStations()) {
+        LinkManager linkManager = new LinkManager();
+        StationManager stationManager = new StationManager();
+        String jsonLinks = Unirest.get("http://localhost:8090/links").asString().getBody();
+        String jsonStation = Unirest.get("http://localhost:8090/stations").asString().getBody();
 
+
+        try {
+            linkManager.addAllLinks(om.readerForListOf(Link.class).readValue(jsonLinks));
+            stationManager.addAllStations(om.readerForListOf(Station.class).readValue(jsonStation));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        List<Link> linkList = linkManager.getLinks(path.getPathNumber());
+        listViewStation.getItems().add(stationManager.getAllStations().get(0).getName().concat(" - " + Utility.timeToString(startingDate)));
+        price.setText(String.valueOf(ticket.getTotalCost()));
+        ticketArriveAt.setText(Utility.dateToString(ticket.getArriveDate()));
+        ticketClass.setText(String.valueOf(ticket.getaClass().getClassNumber()));
+        ticketDepartureAt.setText(Utility.dateToString(ticket.getDepartureDate()));
+
+
+        for (int i = 0; i < linkList.size(); i++){
+            int id = 0;
+            for (Station station : stationManager.getAllStations()) {
+                if (linkList.get(i).getEndStation() == station.getId()) {
+                    id = station.getId();
+                    break;
+                }
+            }
+            time += linkList.get(i).getCost();
+            Date nextStop = new Date(startingDate.getTime() + (time * 60000L));
+            listViewStation.getItems().add(stationManager.getAllStations().get(id).getName().concat(" - " + Utility.timeToString(nextStop)));
+            price.setText(String.valueOf(ticket.getTotalCost()));
+            ticketArriveAt.setText(Utility.dateToString(ticket.getArriveDate()));
+            ticketClass.setText(String.valueOf(ticket.getaClass().getClassNumber()));
+            ticketDepartureAt.setText(Utility.dateToString(ticket.getDepartureDate()));
+            if (i == linkList.size() - 1)
+                return;
+
+        }
+
+            
+
+/*
                 if (station.getId() == path.getLinks().get(i).getStartStation()) {
+                    System.out.println(station);
                     if (first) {
                         listViewStation.getItems().add(station.getName().concat(" - " + Utility.timeToString(startingDate)));
                         first = false;
@@ -92,25 +133,24 @@ public class TicketController implements Initializable {
                     ticketClass.setText(String.valueOf(ticket.getaClass().getClassNumber()));
                     ticketDepartureAt.setText(Utility.dateToString(ticket.getDepartureDate()));
                 }
-            }
-
-        }
+ */
+            
+        
 
     }
 
     @FXML
     void cancelTicketSelection(ActionEvent event) {
-        // TODO: 08/12/2021 change to better self stage declaration
+        
         Stage stage = (Stage) cancel.getScene().getWindow();
         stage.close();
     }
 
-    // TODO: 08/12/2021 decrement number of seats
     @FXML
     void reserveTicket(ActionEvent event) {
         if (selectedPath.getSeats() > 0) {
             Unirest.put("http://localhost:8090/updatePath?elementNumber=" + pathList.indexOf(selectedPath) + "&seats=" + (selectedPath.getSeats() - 1)).asString().getBody();
-            // TODO: 08/12/2021 change to better self stage declaration
+            
             Stage stage = (Stage) cancel.getScene().getWindow();
             stage.close();
 

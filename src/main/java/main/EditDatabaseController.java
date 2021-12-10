@@ -13,13 +13,6 @@ import java.io.IOException;
 public class EditDatabaseController {
 
 
-    // TODO: 10/12/2021 non vengono aggiunti i biglietti
-    // TODO: 10/12/2021 il put dei biglietti non aggiorna la data
-    // TODO: 10/12/2021 add station non funziona
-    // TODO: 10/12/2021 path update non funziona
-    // TODO: 10/12/2021 add path non funziona
-
-
     @FXML // fx:id="editDatabaseLabel"
     private Label editDatabaseLabel; // Value injected by FXMLLoader
 
@@ -30,7 +23,6 @@ public class EditDatabaseController {
         Scene sceneSearch = new Scene(loader.load(), 496, 259);
         stage.setTitle("Modifica Classi");
         stage.setScene(sceneSearch);
-        // TODO: 08/12/2021 change to better self stage declaration
         Stage currentStage = (Stage) editDatabaseLabel.getScene().getWindow();
         stage.initOwner(currentStage);
         stage.initModality(Modality.WINDOW_MODAL);
@@ -46,7 +38,6 @@ public class EditDatabaseController {
         Scene sceneSearch = new Scene(loader.load(), 496, 259);
         stage.setTitle("Modifica Collegamenti");
         stage.setScene(sceneSearch);
-        // TODO: 08/12/2021 change to better self stage declaration
         Stage currentStage = (Stage) editDatabaseLabel.getScene().getWindow();
         stage.initOwner(currentStage);
         stage.initModality(Modality.WINDOW_MODAL);
@@ -62,7 +53,6 @@ public class EditDatabaseController {
         Scene sceneSearch = new Scene(loader.load(), 496, 259);
         stage.setTitle("Modifica Percorsi");
         stage.setScene(sceneSearch);
-        // TODO: 08/12/2021 change to better self stage declaration
         Stage currentStage = (Stage) editDatabaseLabel.getScene().getWindow();
         stage.initOwner(currentStage);
         stage.initModality(Modality.WINDOW_MODAL);
@@ -78,7 +68,6 @@ public class EditDatabaseController {
         Scene sceneSearch = new Scene(loader.load(), 496, 259);
         stage.setTitle("Modifica Stazioni");
         stage.setScene(sceneSearch);
-        // TODO: 08/12/2021 change to better self stage declaration
         Stage currentStage = (Stage) editDatabaseLabel.getScene().getWindow();
         stage.initOwner(currentStage);
         stage.initModality(Modality.WINDOW_MODAL);
@@ -94,7 +83,6 @@ public class EditDatabaseController {
         Scene sceneSearch = new Scene(loader.load(), 496, 259);
         stage.setTitle("Modifica Biglietto");
         stage.setScene(sceneSearch);
-        // TODO: 08/12/2021 change to better self stage declaration
         Stage currentStage = (Stage) editDatabaseLabel.getScene().getWindow();
         stage.initOwner(currentStage);
         stage.initModality(Modality.WINDOW_MODAL);

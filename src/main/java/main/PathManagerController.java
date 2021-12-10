@@ -16,7 +16,6 @@ import kong.unirest.Unirest;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -83,7 +82,6 @@ public class PathManagerController implements Initializable {
 
     @FXML
     void cancelEditPath(ActionEvent event) {
-        // TODO: 08/12/2021 change to better self stage declaration
         Stage stage = (Stage) pathArriveTimeHour.getScene().getWindow();
         stage.close();
     }
@@ -91,7 +89,6 @@ public class PathManagerController implements Initializable {
     @FXML
     void deletePath(ActionEvent event) {
         Unirest.delete("http://localhost:8090/removePath?elementNumber=" + viewPath.getSelectionModel().getSelectedIndex()).asString().getBody();
-        // TODO: 08/12/2021 change to better self stage declaration
         Stage stage = (Stage) pathArriveTimeHour.getScene().getWindow();
         stage.close();
 
@@ -128,25 +125,23 @@ public class PathManagerController implements Initializable {
             if (pathName.getText() == "")
                 return;
 
-            Date departureTime = Utility.convertTime(Integer.parseInt(pathDepartureTimeHour.getText()), Integer.parseInt(pathDepartureTimeMinutes.getText()));
-            System.out.println(departureTime);
-            String url = String.format("http://localhost:8090/addPath?pathName=%s&startDate=%s&endDate=%s&seats=%s", pathName.getText(),departureTime , Utility.convertTime(Integer.parseInt(pathArriveTimeHour.getText()), Integer.parseInt(pathArriveTimeMinutes.getText())), pathSeats.getText());
+            Long departureTime = Utility.convertTime(Integer.parseInt(pathDepartureTimeHour.getText()), Integer.parseInt(pathDepartureTimeMinutes.getText())).getTime();
+            String url = String.format("http://localhost:8090/addPath?pathName=%s&startDate=%s&endDate=%s&seats=%s", pathName.getText(), departureTime, Utility.convertTime(Integer.parseInt(pathArriveTimeHour.getText()), Integer.parseInt(pathArriveTimeMinutes.getText())).getTime(), pathSeats.getText());
             Unirest.post(url).asString().getBody();
         } else {
             List<String> tempDepartureTime = Utility.dateToList(paths.get(viewPath.getSelectionModel().getSelectedIndex()).getDepartureTime());
             List<String> tempArriveTime = Utility.dateToList(paths.get(viewPath.getSelectionModel().getSelectedIndex()).getArrivalTime());
-            String url = "http://localhost:8090/updateClass?elementNumber=" + viewPath.getSelectionModel().getSelectedIndex();
+            String url = "http://localhost:8090/updatePath?elementNumber=" + viewPath.getSelectionModel().getSelectedIndex();
             if (!pathName.getText().equalsIgnoreCase(String.valueOf(paths.get(viewPath.getSelectionModel().getSelectedIndex()).getName())))
                 url = url.concat("&pathName=" + pathName.getText());
             if (!pathArriveTimeMinutes.getText().equalsIgnoreCase(tempArriveTime.get(4)) || !pathArriveTimeHour.getText().equalsIgnoreCase(tempArriveTime.get(3)))
-                url = url.concat("&endDate=" + Utility.convertTime(Integer.parseInt(pathArriveTimeHour.getText()), Integer.parseInt(pathArriveTimeMinutes.getText())));
+                url = url.concat("&endDate=" + Utility.convertTime(Integer.parseInt(pathArriveTimeHour.getText()), Integer.parseInt(pathArriveTimeMinutes.getText())).getTime());
             if (!pathDepartureTimeMinutes.getText().equalsIgnoreCase(tempDepartureTime.get(4)) || !pathDepartureTimeHour.getText().equalsIgnoreCase(tempDepartureTime.get(3)))
-                url = url.concat("&startDate=" + Utility.convertTime(Integer.parseInt(pathDepartureTimeHour.getText()), Integer.parseInt(pathDepartureTimeMinutes.getText())));
+                url = url.concat("&startDate=" + Utility.convertTime(Integer.parseInt(pathDepartureTimeHour.getText()), Integer.parseInt(pathDepartureTimeMinutes.getText())).getTime());
             if (!pathSeats.getText().equalsIgnoreCase(String.valueOf(paths.get(viewPath.getSelectionModel().getSelectedIndex()).getSeats())))
                 url = url.concat("&seats=" + pathSeats.getText());
             Unirest.put(url).asString().getBody();
         }
-        // TODO: 08/12/2021 change to better self stage declaration
         Stage stage = (Stage) pathArriveTimeHour.getScene().getWindow();
         stage.close();
 

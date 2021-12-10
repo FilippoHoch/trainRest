@@ -1,5 +1,6 @@
 package main;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -49,7 +50,10 @@ public class Utility {
      * @return returns the time in milliseconds
      */
     public static Date convertTime(int hours, int minutes) {
-        return new Date((hours * 3600000L + minutes * 60000L));
+        long hoursLong = (hours) * 3600000L;
+        long minutesLong = minutes * 60000L;
+        long time = hoursLong + minutesLong;
+        return new Date(time);
     }
 
     /**
@@ -88,4 +92,146 @@ public class Utility {
         return dateList;
     }
 
+    public static LocalDate convertToLocalDateViaInstant(Date dateToConvert) {
+        return dateToConvert.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
+    }
+
+    public static Date intToDate(Long num) {
+        return new Date(num);
+    }
+
+    public static List<Ticket> sortTicketsByDepartureDate(List<Ticket> tickets) {
+        for (int i = 0; i < tickets.size() - 1; i++) {
+            int minimo = i;
+            for (int j = i + 1; j < tickets.size(); j++) {
+                if (tickets.get(minimo).getDepartureDate().compareTo(tickets.get(j).getDepartureDate()) > 0) {
+                    minimo = j;
+                }
+            }
+            //Se minimo e diverso dall' elemento di partenza
+            //allora avviene lo scambio
+            if (minimo != i) {
+                Ticket k = tickets.get(minimo);
+                tickets.set(minimo, tickets.get(i));
+                tickets.set(i, k);
+            }
+        }
+        return tickets;
+    }
+
+    public static List<Ticket> sortTicketsByArriveDate(List<Ticket> tickets) {
+        for (int i = 0; i < tickets.size() - 1; i++) {
+            int minimo = i;
+            for (int j = i + 1; j < tickets.size(); j++) {
+                if (tickets.get(minimo).getArriveDate().compareTo(tickets.get(j).getArriveDate()) > 0) {
+                    minimo = j;
+                }
+            }
+            //Se minimo e diverso dall' elemento di partenza
+            //allora avviene lo scambio
+            if (minimo != i) {
+                Ticket k = tickets.get(minimo);
+                tickets.set(minimo, tickets.get(i));
+                tickets.set(i, k);
+            }
+        }
+        return tickets;
+    }
+
+    public static List<Ticket> sortTicketsByRoadPath(List<Ticket> tickets) {
+        for (int i = 0; i < tickets.size() - 1; i++) {
+            int minimo = i;
+            for (int j = i + 1; j < tickets.size(); j++) {
+                if (tickets.get(minimo).getRoadPath() > tickets.get(j).getRoadPath()) {
+                    minimo = j;
+                }
+            }
+            //Se minimo e diverso dall' elemento di partenza
+            //allora avviene lo scambio
+            if (minimo != i) {
+                Ticket k = tickets.get(minimo);
+                tickets.set(minimo, tickets.get(i));
+                tickets.set(i, k);
+            }
+        }
+        return tickets;
+    }
+
+    public static List<Ticket> sortTicketsByTotalCost(List<Ticket> tickets) {
+        for (int i = 0; i < tickets.size() - 1; i++) {
+            int minimo = i;
+            for (int j = i + 1; j < tickets.size(); j++) {
+                if (tickets.get(minimo).getTotalCost() > tickets.get(j).getTotalCost()) {
+                    minimo = j;
+                }
+            }
+            //Se minimo e diverso dall' elemento di partenza
+            //allora avviene lo scambio
+            if (minimo != i) {
+                Ticket k = tickets.get(minimo);
+                tickets.set(minimo, tickets.get(i));
+                tickets.set(i, k);
+            }
+        }
+        return tickets;
+    }
+
+    public static List<Path> sortTicketsByPathName(List<Path> paths) {
+        for (int i = 0; i < paths.size() - 1; i++) {
+            int minimo = i;
+            for (int j = i + 1; j < paths.size(); j++) {
+                if (paths.get(minimo).getName().compareTo(paths.get(j).getName()) < 0) {
+                    minimo = j;
+                }
+            }
+            //Se minimo e diverso dall' elemento di partenza
+            //allora avviene lo scambio
+            if (minimo != i) {
+                Path k = paths.get(minimo);
+                paths.set(minimo, paths.get(i));
+                paths.set(i, k);
+            }
+        }
+        return paths;
+    }
+
+    public static List<Path> sortTicketsByPathLinkNumber(List<Path> paths) {
+//        for(int i = 0; i < paths.size()-1; i++) {
+//            int minimo = i;
+//            for(int j = i+1; j < paths.size(); j++) {
+//                if(paths.get(minimo).getSizeLinks() < paths.get(j).getSizeLinks()) {
+//                    minimo = j;
+//                }
+//            }
+//            //Se minimo e diverso dall' elemento di partenza
+//            //allora avviene lo scambio
+//            if(minimo!=i) {
+//                Path k = paths.get(minimo);
+//                paths.set(minimo, paths.get(i));
+//                paths.set(i, k);
+//            }
+//        }
+        return paths;
+    }
+
+    public static List<Path> sortTicketsByPathNumber(List<Path> paths) {
+        for (int i = 0; i < paths.size() - 1; i++) {
+            int minimo = i;
+            for (int j = i + 1; j < paths.size(); j++) {
+                if (paths.get(minimo).getPathNumber() > paths.get(j).getPathNumber()) {
+                    minimo = j;
+                }
+            }
+            //Se minimo e diverso dall' elemento di partenza
+            //allora avviene lo scambio
+            if (minimo != i) {
+                Path k = paths.get(minimo);
+                paths.set(minimo, paths.get(i));
+                paths.set(i, k);
+            }
+        }
+        return paths;
+    }
 }

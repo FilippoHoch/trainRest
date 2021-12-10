@@ -24,6 +24,10 @@ public class StationManager {
         }
     }
 
+    public int getLastStationNumber() {
+        return stations.size();
+    }
+
     public List<Station> getAllStations() {
         return new ArrayList<>(stations.values());
     }

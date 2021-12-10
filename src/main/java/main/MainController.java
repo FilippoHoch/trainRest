@@ -120,6 +120,8 @@ public class MainController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
+
         instance = this;
         dropDownFilter.getItems().add("costo");
         dropDownFilter.getItems().add("numero tratta");
@@ -134,6 +136,8 @@ public class MainController implements Initializable {
                 sortTickets();
             }
         });
+
+        dropDownFilter.setDisable(true);
     }
 
     /**
@@ -163,7 +167,6 @@ public class MainController implements Initializable {
         Scene sceneSearch = new Scene(loader.load(), 300, 375);
         stage.setTitle("Search");
         stage.setScene(sceneSearch);
-        // TODO: 08/12/2021 change to better self stage declaration
         Stage currentStage = (Stage) find.getScene().getWindow();
         stage.initOwner(currentStage);
         stage.initModality(Modality.WINDOW_MODAL);
@@ -191,7 +194,6 @@ public class MainController implements Initializable {
         String jsonTickets = Unirest.get(urlTickets).asString().getBody();
         String jsonPaths = Unirest.get("http://localhost:8090/paths").asString().getBody();
 
-        System.out.println(jsonTickets + "\n" + jsonPaths);
 
         try {
             tickets = om.readerForListOf(Ticket.class).readValue(jsonTickets);
@@ -201,7 +203,6 @@ public class MainController implements Initializable {
         }
         setListViewTickets();
     }
-    // TODO: 08/12/2021 resolve sort problems
 
     /**
      * after you select one of this filters, all of the tickets will be ordered based on that filter
@@ -210,26 +211,25 @@ public class MainController implements Initializable {
      */
     private void sortTickets() {
         if (dropDownFilter.getSelectionModel().getSelectedIndex() == 0)
-            tickets.sort(Comparator.comparingDouble(Ticket::getTotalCost));
+            Utility.sortTicketsByTotalCost(tickets);
         if (dropDownFilter.getSelectionModel().getSelectedIndex() == 1)
-            tickets.sort(Comparator.comparingInt(Ticket::getRoadPath));
+            Utility.sortTicketsByRoadPath(tickets);
         if (dropDownFilter.getSelectionModel().getSelectedIndex() == 2)
-            paths.sort(Comparator.comparing(Path::getName));
+            Utility.sortTicketsByPathName(paths);
         else
-            paths.sort(Comparator.comparingInt(Path::getPathNumber));
-        // TODO: 08/12/2021 Create a comparing function Date
-//        if(dropdownFilter.getSelectionModel().getSelectedIndex() == 3)
-//
-//        if(dropdownFilter.getSelectionModel().getSelectedIndex() == 4)
-//
+            Utility.sortTicketsByPathNumber(paths);
+        if (dropDownFilter.getSelectionModel().getSelectedIndex() == 3)
+            Utility.sortTicketsByDepartureDate(tickets);
+        if (dropDownFilter.getSelectionModel().getSelectedIndex() == 4)
+            Utility.sortTicketsByArriveDate(tickets);
+    // TODO: 08/12/2021 resolve sort problems
         if (dropDownFilter.getSelectionModel().getSelectedIndex() == 5)
-            paths.sort(Comparator.comparingInt(Path::getSizeLinks));
+            Utility.sortTicketsByPathLinkNumber(paths);
         else
-            paths.sort(Comparator.comparingInt(Path::getPathNumber));
+            Utility.sortTicketsByPathNumber(paths);
 
         setListViewTickets();
     }
-    // TODO: 08/12/2021 if there are no items disable
 
     /**
      * this function orders correctly all of the tickets after you give a filter
@@ -237,6 +237,7 @@ public class MainController implements Initializable {
      * @return returns the correct visualisation of the tickets
      */
     private void setListViewTickets() {
+        dropDownFilter.setDisable(false);
         if (!listViewTickets.getItems().isEmpty())
             listViewTickets.getItems().remove(0, listViewTickets.getItems().size());
         for (Ticket ticket : tickets) {
@@ -254,28 +255,29 @@ public class MainController implements Initializable {
      */
     @FXML
     private void selectTicket() throws IOException {
-        selectedTicket = listViewTickets.getSelectionModel().getSelectedIndex();
-        FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("ticket.fxml"));
-        Stage stage = new Stage();
-        Scene sceneTicket = new Scene(loader.load(), 600, 205);
+        if (listViewTickets.getSelectionModel().getSelectedIndex() != -1) {
+            selectedTicket = listViewTickets.getSelectionModel().getSelectedIndex();
+            FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("ticket.fxml"));
+            Stage stage = new Stage();
+            Scene sceneTicket = new Scene(loader.load(), 600, 205);
 
-        ticketSelected = tickets.get(selectedTicket);
-        for (Path path : paths) {
-            if (path.getPathNumber() == ticketSelected.getRoadPath()) {
-                stage.setTitle("Ticket " + path.getName());
-                setPathSelected(path);
-                break;
+            ticketSelected = tickets.get(selectedTicket);
+            for (Path path : paths) {
+                if (path.getPathNumber() == ticketSelected.getRoadPath()) {
+                    stage.setTitle("Ticket " + path.getName());
+                    setPathSelected(path);
+                    break;
+                }
             }
-        }
 
-        stage.setScene(sceneTicket);
-        stage.setResizable(false);
-        stage.setAlwaysOnTop(true);
-        // TODO: 08/12/2021 change to better self stage declaration
-        Stage currentStage = (Stage) find.getScene().getWindow();
-        stage.initOwner(currentStage);
-        stage.initModality(Modality.WINDOW_MODAL);
-        stage.show();
-        TicketController.getInstance().setParameters(ticketSelected, pathSelected, paths);
+            stage.setScene(sceneTicket);
+            stage.setResizable(false);
+            stage.setAlwaysOnTop(true);
+            Stage currentStage = (Stage) find.getScene().getWindow();
+            stage.initOwner(currentStage);
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.show();
+            TicketController.getInstance().setParameters(ticketSelected, pathSelected);
+        }
     }
 }

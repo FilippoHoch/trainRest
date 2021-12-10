@@ -1,7 +1,6 @@
 package main;
 
 import java.util.Date;
-import java.util.List;
 
 public class Path {
     private int pathNumber;
@@ -9,9 +8,6 @@ public class Path {
     private Date departureTime;
     private Date arrivalTime;
     private int seats;
-    private List<Station> stations;
-    private List<Link> links;
-    private int sizeLinks;
 
     public Path(int pathNumber, String name, Date departureTime, Date arrivalTime, int seats) {
         this.pathNumber = pathNumber;
@@ -22,33 +18,6 @@ public class Path {
     }
 
     public Path() {
-    }
-
-    public List<Link> getLinks() {
-        return links;
-    }
-
-    public void setLinks(List<Link> links) {
-        if (links != null)
-            setSizeLinks(links.size());
-        this.links = links;
-    }
-
-
-    public int getSizeLinks() {
-        return sizeLinks;
-    }
-
-    public List<Station> getStations() {
-        return stations;
-    }
-
-    public void setSizeLinks(int sizeLinks) {
-        this.sizeLinks = sizeLinks;
-    }
-
-    public void setStations(List<Station> stations) {
-        this.stations = stations;
     }
 
     public int getPathNumber() {
@@ -99,9 +68,6 @@ public class Path {
                 ", departureTime=" + departureTime +
                 ", arrivalTime=" + arrivalTime +
                 ", seats=" + seats +
-                ", stations=" + stations +
-                ", links=" + links +
-                ", sizeLinks=" + sizeLinks +
                 '}';
     }
 }
