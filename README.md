@@ -118,3 +118,56 @@ http://localhost:8090/removeClass?elementNumber=%s
 ````
 
 ## Stazioni
+
+Gli attributi di stazioni sono:
+
+````java
+setId= id; // L'id della stazione
+setName = name; // Il nome della stazione
+````
+### Aggiorna Stazioni (PUT)
+Permette di aggiornare gli elementi riguardanti le stazioni:
+````
+http://localhost:8090/updateStation?elementNumber=%s&stationName=%s
+````
+
+### Aggiungi Stazione (POST)
+Permette di aggiungere una stazione
+````
+http://localhost:8090/addStation?stationName=%s
+````
+
+### Rimuovi Stazione (DELETE)
+Permette di eliminare la stazione
+````
+http://localhost:8090/removeStation?elementNumber=%s
+````
+
+## Percorso
+Gli attributi di stazioni sono:
+
+````java
+pathNumber= int; // Numero del percorso
+name= String; // Nome del percorso
+departureTime= Date().getTime(); // La data di partenza in millisecondi
+arrivalTime= Date().getTime(); // La data di arrivo in millisecondi
+seats= int; // Numero massimo di posti per quel percorso
+````
+
+### Aggiorna Percorsi (PUT)
+Permette di aggiornare gli elementi riguardanti i percorsi:
+````
+http://localhost:8090/updatePath?elementNumber=%s&pathName=%s&endDate=%s&startDate=%s&seats=%s
+````
+
+### Aggiungi Stazione (POST)
+Permette di aggiungere una stazione
+````
+http://localhost:8090/addStation?pathName=%s&endDate=%s&startDate=%s&seats=%s
+````
+
+### Rimuovi Stazione (DELETE)
+Permette di eliminare la stazione
+````
+http://localhost:8090/removePath?elementNumber=%s
+````
