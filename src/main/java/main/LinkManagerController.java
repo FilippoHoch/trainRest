@@ -101,7 +101,7 @@ public class LinkManagerController implements Initializable {
         } else {
             String url = "http://localhost:8090/updateLink?elementNumber=" + viewLink.getSelectionModel().getSelectedIndex();
             if (!linkCost.getText().equalsIgnoreCase(String.valueOf(stations.get(viewLink.getSelectionModel().getSelectedIndex()).getName())))
-                url = url.concat("&className=" + linkCost.getText());
+                url = url.concat("&cost=" + linkCost.getText());
             if (stations.get(startingStationLink.getSelectionModel().getSelectedIndex()).getId() != links.get(viewLink.getSelectionModel().getSelectedIndex()).getStartStation())
                 url = url.concat("&startStation=" + stations.get(startingStationLink.getSelectionModel().getSelectedIndex()).getId());
             if (stations.get(arriveStationLink.getSelectionModel().getSelectedIndex()).getId() != links.get(viewLink.getSelectionModel().getSelectedIndex()).getEndStation())

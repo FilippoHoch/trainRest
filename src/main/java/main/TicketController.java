@@ -65,12 +65,10 @@ public class TicketController implements Initializable {
     }
 
     @FXML
-    public void setParameters(Ticket ticket, Path path, List<Path> paths) {
-        pathList = paths;
+    public void setParameters(Ticket ticket, Path path) {
         selectedPath = path;
-        boolean first = true;
         int time = 0;
-        Date startingDate = ticket.getDepartureDate();
+        Date startingDate = new Date(path.getDepartureTime().getTime() - 3600000L);
 
         LinkManager linkManager = new LinkManager();
         StationManager stationManager = new StationManager();
