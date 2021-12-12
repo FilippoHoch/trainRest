@@ -76,7 +76,6 @@ public class TicketController implements Initializable {
         String jsonLinks = Unirest.get("http://localhost:8090/links").asString().getBody();
         String jsonStation = Unirest.get("http://localhost:8090/stations").asString().getBody();
 
-
         try {
             linkManager.addAllLinks(om.readerForListOf(Link.class).readValue(jsonLinks));
             stationManager.addAllStations(om.readerForListOf(Station.class).readValue(jsonStation));
@@ -93,6 +92,7 @@ public class TicketController implements Initializable {
                 arriveStationId = station.getId();
         }
 
+        PathFinder finder = new PathFinder();
         List<Link> linkList = linkManager.getLinks(path.getPathNumber());
         price.setText(String.valueOf(ticket.getTotalCost()));
         ticketArriveAt.setText(Utility.dateToString(ticket.getArriveDate()));

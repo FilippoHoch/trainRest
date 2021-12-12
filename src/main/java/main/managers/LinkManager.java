@@ -20,6 +20,18 @@ public class LinkManager {
         return links.get(station.getId());
     }
 
+    public List<Link> getLinks(Station startStation, Station endStation, int pathNumber) {
+        List<Link> links = new ArrayList<>();
+        for (Link link : getLinks(startStation, pathNumber)) {
+            if (link.getEndStation() == endStation.getId())
+                links.add(link);
+        }
+        if (links.size() > 1) {
+            System.out.println("more than one link to the same station with same path number!");
+        }
+        return links;
+    }
+
     public static List<Link> filterLinks(List<Link> links, int pathNumber) {
         List<Link> filteredLinks = new ArrayList<>();
         for (Link link : links) {
