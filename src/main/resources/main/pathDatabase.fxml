@@ -5,7 +5,7 @@
 <?import javafx.scene.text.*?>
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="259.0"
             prefWidth="496.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="main.PathManagerController">
+            fx:controller="main.controller.PathManagerController">
     <children>
         <Label layoutX="213.0" layoutY="25.0" text="Path manager">
             <font>

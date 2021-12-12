@@ -5,7 +5,7 @@
 <?import javafx.scene.text.Font?>
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="259.0"
             prefWidth="496.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="main.TicketManagerController">
+            fx:controller="main.controller.TicketManagerController">
     <children>
         <Label layoutX="213.0" layoutY="20.0" text="Ticket manager">
             <font>

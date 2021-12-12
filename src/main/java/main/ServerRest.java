@@ -44,63 +44,72 @@ public class ServerRest {
         stationManager.addStation(new Station(4, "Villaggio"));
         stationManager.addStation(new Station(5, "Bivio"));
 
-        // initialize paths
-        paths.add(new Path(0, "Percorso 1 Mattina", Utility.convertTime(7, 30), Utility.convertTime(8, 15), 100));
-        paths.add(new Path(1, "Percorso 2 Mattina", Utility.convertTime(6, 30), Utility.convertTime(7, 05), 150));
-        paths.add(new Path(2, "Percorso 3 Mattina", Utility.convertTime(8, 30), Utility.convertTime(8, 55), 350));
-        paths.add(new Path(3, "Percorso 4 Mattina", Utility.convertTime(9, 20), Utility.convertTime(10, 10), 100));
-        paths.add(new Path(4, "Percorso 5 Mattina", Utility.convertTime(10, 20), Utility.convertTime(10, 50), 150));
-        paths.add(new Path(5, "Percorso 6 Mattina", Utility.convertTime(11, 30), Utility.convertTime(12, 15), 350));
-        paths.add(new Path(6, "Percorso 1 Pomeriggio", Utility.convertTime(14, 30), Utility.convertTime(15, 10), 100));
-        paths.add(new Path(7, "Percorso 2 Pomeriggio", Utility.convertTime(13, 30), Utility.convertTime(14, 35), 150));
-        paths.add(new Path(8, "Percorso 3 Pomeriggio", Utility.convertTime(15, 00), Utility.convertTime(15, 30), 350));
-        paths.add(new Path(9, "Percorso 4 Pomeriggio", Utility.convertTime(18, 20), Utility.convertTime(19, 00), 100));
-        paths.add(new Path(10, "Percorso 5 Pomeriggio", Utility.convertTime(16, 10), Utility.convertTime(16, 50), 150));
-        paths.add(new Path(11, "Percorso 6 Pomeriggio", Utility.convertTime(17, 15), Utility.convertTime(17, 55), 350));
-
-        // from Deposito
+        // path number 0
+        paths.add(new Path(0, "Percorso 1 Mattina", Utility.convertTime(7, 30), Utility.convertTime(8, 15), 130));
         linkManager.addLink(new Link(0, 1, 0, 10));
-        linkManager.addLink(new Link(0, 1, 1, 10));
-        linkManager.addLink(new Link(0, 1, 2, 10));
-        linkManager.addLink(new Link(0, 1, 3, 10));
-
-        // from Ponte
         linkManager.addLink(new Link(1, 4, 0, 15));
+        linkManager.addLink(new Link(4, 3, 0, 20));
+
+        // path number 1
+        paths.add(new Path(1, "Percorso 2 Mattina", Utility.convertTime(6, 30), Utility.convertTime(7, 05), 50));
+        linkManager.addLink(new Link(0, 1, 1, 10));
         linkManager.addLink(new Link(1, 2, 1, 25));
+
+        // path number 2
+        paths.add(new Path(2, "Percorso 3 Mattina", Utility.convertTime(8, 30), Utility.convertTime(8, 55), 350));
+        linkManager.addLink(new Link(0, 1, 2, 10));
         linkManager.addLink(new Link(1, 4, 2, 15));
+
+        // path number 3
+        paths.add(new Path(3, "Percorso 4 Mattina", Utility.convertTime(9, 20), Utility.convertTime(10, 10), 300));
+        linkManager.addLink(new Link(0, 1, 3, 10));
         linkManager.addLink(new Link(1, 4, 3, 15));
+        linkManager.addLink(new Link(4, 3, 3, 20));
+        linkManager.addLink(new Link(3, 1, 3, 5));
+
+        // path number 4
+        paths.add(new Path(4, "Percorso 5 Mattina", Utility.convertTime(10, 20), Utility.convertTime(10, 50), 200));
         linkManager.addLink(new Link(1, 3, 4, 5));
+        linkManager.addLink(new Link(3, 4, 4, 25));
+
+        // path number 5
+        paths.add(new Path(5, "Percorso 6 Mattina", Utility.convertTime(11, 30), Utility.convertTime(12, 15), 250));
         linkManager.addLink(new Link(1, 3, 5, 5));
+        linkManager.addLink(new Link(3, 4, 5, 25));
+        linkManager.addLink(new Link(4, 5, 5, 15));
+
+        // path number 6
+        paths.add(new Path(6, "Percorso 1 Pomeriggio", Utility.convertTime(14, 30), Utility.convertTime(15, 10), 100));
+        linkManager.addLink(new Link(2, 1, 6, 25));
         linkManager.addLink(new Link(1, 4, 6, 15));
+
+        // path number 7
+        paths.add(new Path(7, "Percorso 2 Pomeriggio", Utility.convertTime(13, 30), Utility.convertTime(14, 35), 200));
         linkManager.addLink(new Link(1, 4, 7, 15));
+        linkManager.addLink(new Link(4, 3, 7, 20));
+        linkManager.addLink(new Link(3, 1, 7, 5));
+        linkManager.addLink(new Link(1, 2, 7, 25));
+
+        // path number 8
+        paths.add(new Path(8, "Percorso 3 Pomeriggio", Utility.convertTime(15, 00), Utility.convertTime(15, 30), 250));
+        linkManager.addLink(new Link(3, 1, 8, 5));
         linkManager.addLink(new Link(1, 2, 8, 25));
 
-
-        // from Zona Industriale
-        linkManager.addLink(new Link(2, 1, 6, 25));
-        linkManager.addLink(new Link(2, 5, 7, 30));
-
-        // from Ranch
-        linkManager.addLink(new Link(3, 1, 3, 5));
-        linkManager.addLink(new Link(3, 4, 4, 25));
-        linkManager.addLink(new Link(3, 4, 5, 25));
-        linkManager.addLink(new Link(3, 1, 8, 5));
+        // path number 9
+        paths.add(new Path(9, "Percorso 4 Pomeriggio", Utility.convertTime(18, 20), Utility.convertTime(19, 00), 100));
         linkManager.addLink(new Link(3, 4, 9, 25));
-        linkManager.addLink(new Link(3, 1, 11, 5));
-
-
-        // from Villaggio
-        linkManager.addLink(new Link(4, 3, 0, 20));
-        linkManager.addLink(new Link(4, 3, 3, 20));
-        linkManager.addLink(new Link(4, 5, 5, 15));
-        linkManager.addLink(new Link(4, 3, 7, 20));
         linkManager.addLink(new Link(4, 5, 9, 15));
-        linkManager.addLink(new Link(4, 5, 10, 15));
-        linkManager.addLink(new Link(4, 3, 11, 20));
 
-        // from Bivio
+        // path number 10
+        paths.add(new Path(10, "Percorso 5 Pomeriggio", Utility.convertTime(16, 10), Utility.convertTime(16, 50), 150));
+        linkManager.addLink(new Link(4, 5, 10, 15));
         linkManager.addLink(new Link(5, 2, 10, 25));
+
+        // path number 11
+        paths.add(new Path(11, "Percorso 6 Pomeriggio", Utility.convertTime(17, 15), Utility.convertTime(17, 55), 300));
         linkManager.addLink(new Link(5, 4, 11, 15));
+        linkManager.addLink(new Link(4, 3, 11, 20));
+        linkManager.addLink(new Link(3, 1, 11, 5));
 
         // Classes
         classes.add(new Class(1, 1.6));
@@ -109,9 +118,9 @@ public class ServerRest {
 
         // Tickets
         for (int i = 0; i < paths.size(); i++) {
-            for (int j = 0; j < classes.size(); j++) {
-                tickets.add(new Ticket(i, currentDate, classes.get(j)));
-                tickets.add(new Ticket(i, nextDate, classes.get(j)));
+            for (Class aClass : classes) {
+                tickets.add(new Ticket(i, currentDate, aClass));
+                tickets.add(new Ticket(i, nextDate, aClass));
             }
         }
 
@@ -269,31 +278,16 @@ public class ServerRest {
             return "Class not found";
         })));
 
-        get("/classes", ((request, response) -> {
+        get("/classes", ((request, response) -> om.writeValueAsString(classes)));
 
-            return om.writeValueAsString(classes);
-        }));
+        get("/stations", ((request, response) -> om.writeValueAsString(stationManager.getAllStations())));
 
-        get("/stations", ((request, response) -> {
+        get("/paths", ((request, response) -> om.writeValueAsString(paths)));
 
-            return om.writeValueAsString(stationManager.getAllStations());
-        }));
-
-        get("/paths", ((request, response) -> {
-
-            return om.writeValueAsString(paths);
-        }));
-
-        get("/links", ((request, response) -> {
-
-            return om.writeValueAsString(linkManager.getAllLinks());
-        }));
+        get("/links", ((request, response) -> om.writeValueAsString(linkManager.getAllLinks())));
 
 
-        get("/all", ((request, response) -> {
-
-            return om.writeValueAsString(tickets);
-        }));
+        get("/all", ((request, response) -> om.writeValueAsString(tickets)));
 
         get("/tickets", ((request, response) -> {
 
@@ -328,9 +322,6 @@ public class ServerRest {
                     for (int a : numbers) {
                         System.out.print("path number " + a + " available from " + startStation.getName() + " to " + endStation.getName() + "\n");
                         for (Ticket ticket : tickets) {
-
-                            System.out.println("a: " + a + " start: " + start + " end: " + end);
-
                             startingTime = startingStationTime(a, start, ticket.getDay());
 
                             destinationTime = destinationStationTime(a, end, ticket.getDay());
@@ -366,9 +357,9 @@ public class ServerRest {
         List<Link> linkList = linkManager.getLinks(pathNumber);
 
         int time = 0;
-        for (int i = 0; i < linkList.size(); i++) {
-            time += linkList.get(i).getCost();
-            if (linkList.get(i).getEndStation() == destinationStation)
+        for (Link link : linkList) {
+            time += link.getCost();
+            if (link.getEndStation() == destinationStation)
                 break;
         }
         return new Date(day.getTime() + paths.get(pathNumber).getDepartureTime().getTime() + (time * 60000L));
@@ -379,9 +370,9 @@ public class ServerRest {
         if (linkList.get(0).getStartStation() == startingStation)
             return new Date(day.getTime() + paths.get(pathNumber).getDepartureTime().getTime());
         int time = 0;
-        for (int i = 0; i < linkList.size(); i++) {
-            time += linkList.get(i).getCost();
-            if (linkList.get(i).getEndStation() == startingStation)
+        for (Link link : linkList) {
+            time += link.getCost();
+            if (link.getEndStation() == startingStation)
                 break;
         }
         long dateResult = time * 60000L + day.getTime() + paths.get(pathNumber).getDepartureTime().getTime();

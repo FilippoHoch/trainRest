@@ -1,5 +1,7 @@
 package main;
 
+import java.util.Objects;
+
 public class Station {
     private int id;
     private String name;
@@ -36,7 +38,6 @@ public class Station {
     /**
      * override of the variable "path parent" and "path cost"
      *
-     * @return returns a new value for the variables
      */
     public void clear() {
         pathParent = -1;
@@ -62,9 +63,6 @@ public class Station {
     /**
      * based on the cost of the ticket, if this is smaller than a certain value, it will get changed, or it would be too cheap :)
      *
-     * @param station
-     * @param link
-     * @return returns a new ticket cost if the previous is too small
      */
     public void updatePathCost(Station station, Link link) {
         int newCost = station.pathCost + link.getCost();
@@ -74,11 +72,26 @@ public class Station {
         }
     }
 
+
+
     @Override
     public String toString() {
         return "Station{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Station station = (Station) o;
+        return id == station.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, pathParent, pathCost);
     }
 }

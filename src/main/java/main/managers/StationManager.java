@@ -36,10 +36,6 @@ public class StationManager {
         return stations.remove(id);
     }
 
-    public boolean isEmpty() {
-        return stations.isEmpty();
-    }
-
     public Station getMin() {
         Station minStation = null;
         int minCost = Integer.MAX_VALUE;

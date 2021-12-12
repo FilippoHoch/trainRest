@@ -18,4 +18,6 @@ module main {
 
     opens main to javafx.fxml;
     exports main;
+    exports main.controller;
+    opens main.controller to javafx.fxml;
 }

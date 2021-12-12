@@ -63,6 +63,10 @@ public class Ticket {
         return aClass;
     }
 
+    public void setTotalCost(double totalCost) {
+        this.totalCost = totalCost;
+    }
+
     public void setRoadPath(int roadPath) {
         this.roadPath = roadPath;
     }
@@ -73,10 +77,6 @@ public class Ticket {
 
     public void setaClass(Class aClass) {
         this.aClass = aClass;
-    }
-
-    public void setTotalCost(double totalCost) {
-        this.totalCost = totalCost;
     }
 
     public Ticket(int roadPath, Date day, Class aClass) {
@@ -104,8 +104,6 @@ public class Ticket {
     /**
      * this function calculates the cost of the ticket based on the class and the cost of that singular ticket
      *
-     * @param linkList
-     * @return returns the cost of the ticket
      */
     public void setTotalCost(List<Link> linkList) {
         totalCost = 0;

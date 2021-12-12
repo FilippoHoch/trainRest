@@ -1,15 +1,15 @@
-package main;
+package main.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import kong.unirest.Unirest;
+import main.Class;
+import main.Station;
+import main.Utility;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -37,7 +37,7 @@ public class SearchController implements Initializable {
     private Button cancel; // Value injected by FXMLLoader
 
     @FXML // fx:id="chosenClass"
-    private ChoiceBox chosenClass; // Value injected by FXMLLoader
+    private ChoiceBox<Integer> chosenClass; // Value injected by FXMLLoader
 
     @FXML // fx:id="travelDate"
     private DatePicker travelDate; // Value injected by FXMLLoader
@@ -49,7 +49,7 @@ public class SearchController implements Initializable {
     private TextField departureTimeMinutes; // Value injected by FXMLLoader
 
     @FXML // fx:id="destinationStation"
-    private ChoiceBox destinationStation; // Value injected by FXMLLoader
+    private ChoiceBox<String> destinationStation; // Value injected by FXMLLoader
 
     @FXML // fx:id="disponibilityPrice"
     private Slider disponibilityPrice; // Value injected by FXMLLoader
@@ -61,18 +61,13 @@ public class SearchController implements Initializable {
     private Button find; // Value injected by FXMLLoader
 
     @FXML // fx:id="startingStation"
-    private ChoiceBox startingStation; // Value injected by FXMLLoader
+    private ChoiceBox<String> startingStation; // Value injected by FXMLLoader
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        disponibilityPrice.valueProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
-                currentPrice.setText(Double.toString(Utility.round(disponibilityPrice.getValue(), 2)));
-            }
-        });
+        disponibilityPrice.valueProperty().addListener((observableValue, number, t1) -> currentPrice.setText(Double.toString(Utility.round(disponibilityPrice.getValue(), 2))));
 
         String jsonStations = Unirest.get("http://localhost:8090/stations").asString().getBody();
         String jsonClasses = Unirest.get("http://localhost:8090/classes").asString().getBody();
@@ -99,29 +94,29 @@ public class SearchController implements Initializable {
     }
 
     @FXML
-    void cancelSearchTickets(ActionEvent event) {
+    void cancelSearchTickets() {
         Stage stage = (Stage) cancel.getScene().getWindow();
         stage.close();
     }
 
     @FXML
-    void findTickets(ActionEvent event) {
+    void findTickets() {
         if (checkParameters()) {
             Stage stage = (Stage) cancel.getScene().getWindow();
 
             MainController.getInstance().setSearch(true);
             MainController.getInstance().setSelectedArriveTime(Utility.stringToDate(travelDate.getValue() + " " + arriveTimeHour.getText() + ":" + arriveTimeMinutes.getText()));
             MainController.getInstance().setSelectedDisponibilityPrice(Utility.round(disponibilityPrice.getValue(), 2));
-            MainController.getInstance().setSelectedChosenClass((Integer) chosenClass.getValue());
+            MainController.getInstance().setSelectedChosenClass(chosenClass.getValue());
             MainController.getInstance().setSelectedDepartureTime(Utility.stringToDate(travelDate.getValue() + " " + departureTimeHour.getText() + ":" + departureTimeMinutes.getText()));
             for (Station station : stations) {
-                if (station.getName().equalsIgnoreCase((String) destinationStation.getValue())) {
+                if (station.getName().equalsIgnoreCase(destinationStation.getValue())) {
                     MainController.getInstance().setSelectedDestinationStation(stations.indexOf(station));
                     break;
                 }
             }
             for (Station station : stations) {
-                if (station.getName().equalsIgnoreCase((String) startingStation.getValue())) {
+                if (station.getName().equalsIgnoreCase(startingStation.getValue())) {
                     MainController.getInstance().setSelectedStartingStation(stations.indexOf(station));
                     break;
                 }
@@ -138,14 +133,6 @@ public class SearchController implements Initializable {
      */
     public boolean checkParameters() {
         errorMessage.setText("");
-        if (travelDate.getValue() == null) {
-            errorMessage.setText("Missing argument");
-            return false;
-        }
-        if (chosenClass.getValue() == null) {
-            errorMessage.setText("Missing argument");
-            return false;
-        }
         if (disponibilityPrice.getValue() == 0) {
             disponibilityPrice.setValue(100.0);
         }
@@ -173,12 +160,38 @@ public class SearchController implements Initializable {
         if (arriveTimeMinutes.getText().length() < 2) {
             arriveTimeMinutes.setText("0" + arriveTimeMinutes.getText());
         }
-        if (startingStation.getValue() == null)
+        if (departureTimeHour.getText().length() > 24) {
             return false;
-        if (destinationStation.getValue() == null)
+        }
+        if (arriveTimeHour.getText().length() > 24) {
             return false;
-        if (chosenClass.getValue() == null)
+        }
+        if (departureTimeMinutes.getText().length() > 60) {
             return false;
+        }
+        if (arriveTimeMinutes.getText().length() > 60) {
+            return false;
+        }
+        if (startingStation.getValue() == null) {
+            errorMessage.setText("Missing argument");
+            return false;
+        }
+        if (destinationStation.getValue() == null) {
+            errorMessage.setText("Missing argument");
+            return false;
+        }
+        if (chosenClass.getValue() == null) {
+            errorMessage.setText("Missing argument");
+            return false;
+        }
+        if (travelDate.getValue() == null) {
+            errorMessage.setText("Missing argument");
+            return false;
+        }
+        if (chosenClass.getValue() == null) {
+            errorMessage.setText("Missing argument");
+            return false;
+        }
         return true;
     }
 }

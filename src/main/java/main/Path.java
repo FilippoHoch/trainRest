@@ -20,12 +20,12 @@ public class Path {
     public Path() {
     }
 
-    public int getPathNumber() {
-        return pathNumber;
-    }
-
     public void setPathNumber(int pathNumber) {
         this.pathNumber = pathNumber;
+    }
+
+    public int getPathNumber() {
+        return pathNumber;
     }
 
     public String getName() {

@@ -1,4 +1,4 @@
-package main;
+package main.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,10 +13,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import kong.unirest.Unirest;
+import main.Station;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class StationManagerController implements Initializable {
@@ -40,7 +42,7 @@ public class StationManagerController implements Initializable {
 
     @FXML
     void cancelEditStation(ActionEvent event) {
-        
+
         Stage stage = (Stage) stationName.getScene().getWindow();
         stage.close();
     }
@@ -48,7 +50,7 @@ public class StationManagerController implements Initializable {
     @FXML
     void deleteStation(ActionEvent event) {
         Unirest.delete("http://localhost:8090/removeStation?elementNumber=" + viewStation.getSelectionModel().getSelectedIndex()).asString().getBody();
-        
+
         Stage stage = (Stage) stationName.getScene().getWindow();
         stage.close();
     }
@@ -64,7 +66,7 @@ public class StationManagerController implements Initializable {
     @FXML
     void saveStation(ActionEvent event) {
         if (deleteStationButton.isDisable()) {
-            if (stationName.getText() == "")
+            if (Objects.equals(stationName.getText(), ""))
                 return;
             String url = String.format("http://localhost:8090/addStation?stationName=%s", stationName.getText());
             Unirest.post(url).asString().getBody();
@@ -74,7 +76,7 @@ public class StationManagerController implements Initializable {
                 url = url.concat("&stationName=" + stationName.getText());
             Unirest.put(url).asString().getBody();
         }
-        
+
         Stage stage = (Stage) stationName.getScene().getWindow();
         stage.close();
     }
@@ -102,12 +104,7 @@ public class StationManagerController implements Initializable {
             viewStation.getItems().add(station.getName());
         }
 
-        viewStation.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observableValue, Number number, Number number2) {
-                editPath();
-            }
-        });
+        viewStation.getSelectionModel().selectedIndexProperty().addListener((observableValue, number, number2) -> editPath());
 
     }
 }

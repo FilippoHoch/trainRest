@@ -1,5 +1,10 @@
 package main;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import kong.unirest.Unirest;
+import main.managers.LinkManager;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -13,7 +18,6 @@ public class Utility {
     /**
      * transform a date value in a string
      *
-     * @param date
      * @return returns a string
      */
     public static String dateToString(Date date) {
@@ -23,7 +27,6 @@ public class Utility {
     /**
      * transform a string containing a date value in a date
      *
-     * @param string
      * @return returns a date
      */
     public static Date stringToDate(String string) {
@@ -35,7 +38,6 @@ public class Utility {
     /**
      * transform a string containing a date and a time value in a date
      *
-     * @param string
      * @return returns a date
      */
     public static Date stringToDateTime(String string) {
@@ -45,8 +47,6 @@ public class Utility {
     /**
      * transform minutes and hours into milliseconds
      *
-     * @param hours
-     * @param minutes
      * @return returns the time in milliseconds
      */
     public static Date convertTime(int hours, int minutes) {
@@ -59,8 +59,6 @@ public class Utility {
     /**
      * changes a certain value in a double with 2 decimals
      *
-     * @param value
-     * @param places
      * @return returns the values in double with 2 decimals
      */
     public static double round(double value, int places) {
@@ -74,11 +72,6 @@ public class Utility {
 
     public static String timeToString(Date time) {
         return time.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime().format(DateTimeFormatter.ofPattern("HH:mm"));
-    }
-
-    public static Date stringToOnlyDate(String string) {
-        Date temp = Date.from(LocalDateTime.parse(string, DateTimeFormatter.ofPattern("dd/MM/yyyy")).atZone(ZoneId.systemDefault()).toInstant());
-        return temp;
     }
 
 
@@ -102,7 +95,7 @@ public class Utility {
         return new Date(num);
     }
 
-    public static List<Ticket> sortTicketsByDepartureDate(List<Ticket> tickets) {
+    public static void sortTicketsByDepartureDate(List<Ticket> tickets) {
         for (int i = 0; i < tickets.size() - 1; i++) {
             int minimo = i;
             for (int j = i + 1; j < tickets.size(); j++) {
@@ -118,10 +111,9 @@ public class Utility {
                 tickets.set(i, k);
             }
         }
-        return tickets;
     }
 
-    public static List<Ticket> sortTicketsByArriveDate(List<Ticket> tickets) {
+    public static void sortTicketsByArriveDate(List<Ticket> tickets) {
         for (int i = 0; i < tickets.size() - 1; i++) {
             int minimo = i;
             for (int j = i + 1; j < tickets.size(); j++) {
@@ -137,10 +129,9 @@ public class Utility {
                 tickets.set(i, k);
             }
         }
-        return tickets;
     }
 
-    public static List<Ticket> sortTicketsByRoadPath(List<Ticket> tickets) {
+    public static void sortTicketsByRoadPath(List<Ticket> tickets) {
         for (int i = 0; i < tickets.size() - 1; i++) {
             int minimo = i;
             for (int j = i + 1; j < tickets.size(); j++) {
@@ -156,10 +147,9 @@ public class Utility {
                 tickets.set(i, k);
             }
         }
-        return tickets;
     }
 
-    public static List<Ticket> sortTicketsByTotalCost(List<Ticket> tickets) {
+    public static void sortTicketsByTotalCost(List<Ticket> tickets) {
         for (int i = 0; i < tickets.size() - 1; i++) {
             int minimo = i;
             for (int j = i + 1; j < tickets.size(); j++) {
@@ -175,10 +165,9 @@ public class Utility {
                 tickets.set(i, k);
             }
         }
-        return tickets;
     }
 
-    public static List<Path> sortTicketsByPathName(List<Path> paths) {
+    public static void sortTicketsByPathName(List<Path> paths) {
         for (int i = 0; i < paths.size() - 1; i++) {
             int minimo = i;
             for (int j = i + 1; j < paths.size(); j++) {
@@ -194,29 +183,38 @@ public class Utility {
                 paths.set(i, k);
             }
         }
-        return paths;
     }
 
-    public static List<Path> sortTicketsByPathLinkNumber(List<Path> paths) {
-//        for(int i = 0; i < paths.size()-1; i++) {
-//            int minimo = i;
-//            for(int j = i+1; j < paths.size(); j++) {
-//                if(paths.get(minimo).getSizeLinks() < paths.get(j).getSizeLinks()) {
-//                    minimo = j;
-//                }
-//            }
-//            //Se minimo e diverso dall' elemento di partenza
-//            //allora avviene lo scambio
-//            if(minimo!=i) {
-//                Path k = paths.get(minimo);
-//                paths.set(minimo, paths.get(i));
-//                paths.set(i, k);
-//            }
-//        }
-        return paths;
+    public static void sortTicketsByPathLinkNumber(List<Path> paths) {
+        ObjectMapper om = new ObjectMapper();
+        LinkManager linkManager = new LinkManager();
+        String jsonLinks = Unirest.get("http://localhost:8090/links").asString().getBody();
+
+
+        try {
+            linkManager.addAllLinks(om.readerForListOf(Link.class).readValue(jsonLinks));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        for (int i = 0; i < paths.size() - 1; i++) {
+            int minimo = i;
+            for (int j = i + 1; j < paths.size(); j++) {
+                if (linkManager.getNumberOfLinks(paths.get(minimo).getPathNumber()) > linkManager.getNumberOfLinks(paths.get(j).getPathNumber())) {
+                    minimo = j;
+                }
+            }
+            //Se minimo e diverso dall' elemento di partenza
+            //allora avviene lo scambio
+            if (minimo != i) {
+                Path k = paths.get(minimo);
+                paths.set(minimo, paths.get(i));
+                paths.set(i, k);
+            }
+        }
     }
 
-    public static List<Path> sortTicketsByPathNumber(List<Path> paths) {
+    public static void sortTicketsByPathNumber(List<Path> paths) {
         for (int i = 0; i < paths.size() - 1; i++) {
             int minimo = i;
             for (int j = i + 1; j < paths.size(); j++) {
@@ -232,6 +230,5 @@ public class Utility {
                 paths.set(i, k);
             }
         }
-        return paths;
     }
 }

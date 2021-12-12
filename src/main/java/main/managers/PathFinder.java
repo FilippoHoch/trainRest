@@ -60,6 +60,7 @@ public class PathFinder {
             } while (destination.getPathParent() != -1);
 
             Collections.reverse(path);
+
             return path;
         }
     }
@@ -86,7 +87,7 @@ public class PathFinder {
 
         if (stationLinks == null) return;
 
-        Station nextStation = null;
+        Station nextStation;
         for (Link link : stationLinks) {
             nextStation = newStations.getStation(link.getEndStation());
             if (nextStation == null) {

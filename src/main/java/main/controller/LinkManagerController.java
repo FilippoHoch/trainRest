@@ -1,10 +1,7 @@
-package main;
+package main.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -13,10 +10,14 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import kong.unirest.Unirest;
+import main.Link;
+import main.Path;
+import main.Station;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class LinkManagerController implements Initializable {
@@ -59,20 +60,20 @@ public class LinkManagerController implements Initializable {
     private ChoiceBox<String> arriveStationLink;
 
     @FXML
-    void cancelEditLink(ActionEvent event) {
+    void cancelEditLink() {
         Stage stage = (Stage) linkCost.getScene().getWindow();
         stage.close();
     }
 
     @FXML
-    void deleteLink(ActionEvent event) {
+    void deleteLink() {
         Unirest.delete("http://localhost:8090/removeLink?elementNumber=" + viewLink.getSelectionModel().getSelectedIndex()).asString().getBody();
         Stage stage = (Stage) linkCost.getScene().getWindow();
         stage.close();
     }
 
     @FXML
-    void newLink(ActionEvent event) {
+    void newLink() {
         linkCost.setDisable(false);
         pathNumberLink.setDisable(false);
         arriveStationLink.setDisable(false);
@@ -86,9 +87,9 @@ public class LinkManagerController implements Initializable {
     }
 
     @FXML
-    void saveLink(ActionEvent event) {
+    void saveLink() {
         if (deleteLinkButton.isDisable()) {
-            if (linkCost.getText() == "")
+            if (Objects.equals(linkCost.getText(), ""))
                 return;
             if (pathNumberLink.getValue() == null)
                 return;
@@ -163,11 +164,6 @@ public class LinkManagerController implements Initializable {
             arriveStationLink.getItems().add(station.getName());
         }
 
-        viewLink.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observableValue, Number number, Number number2) {
-                editPath();
-            }
-        });
+        viewLink.getSelectionModel().selectedIndexProperty().addListener((observableValue, number, number2) -> editPath());
     }
 }

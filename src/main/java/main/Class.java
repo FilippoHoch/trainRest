@@ -23,12 +23,12 @@ public class Class {
         return multiplier;
     }
 
-    public void setClassNumber(Integer classNumber) {
-        this.classNumber = classNumber;
-    }
-
     public void setMultiplier(double multiplier) {
         this.multiplier = multiplier;
+    }
+
+    public void setClassNumber(Integer classNumber) {
+        this.classNumber = classNumber;
     }
 
     @Override

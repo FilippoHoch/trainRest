@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 <AnchorPane prefHeight="149.0" prefWidth="198.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="main.EditDatabaseController">
+            fx:controller="main.controller.EditDatabaseController">
     <Button layoutX="15.0" layoutY="14.0" mnemonicParsing="false" onAction="#editTicket" text="Edit tickets"/>
     <Button layoutX="17.0" layoutY="46.0" mnemonicParsing="false" onAction="#editPath" text="Edit paths"/>
     <Button layoutX="99.0" layoutY="46.0" mnemonicParsing="false" onAction="#editClass" text="Edit classes"/>

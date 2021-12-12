@@ -1,9 +1,7 @@
-package main;
+package main.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -13,10 +11,13 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import kong.unirest.Unirest;
+import main.Path;
+import main.Utility;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class PathManagerController implements Initializable {
@@ -118,33 +119,33 @@ public class PathManagerController implements Initializable {
 
     @FXML
     void savePath(ActionEvent event) {
-        checkParamets();
-        if (deletePathButton.isDisable()) {
-            if (pathSeats.getText() == "")
-                return;
-            if (pathName.getText() == "")
-                return;
+        if (checkParamets()){
+            if (deletePathButton.isDisable()) {
+                if (Objects.equals(pathSeats.getText(), ""))
+                    return;
+                if (Objects.equals(pathName.getText(), ""))
+                    return;
 
-            Long departureTime = Utility.convertTime(Integer.parseInt(pathDepartureTimeHour.getText()), Integer.parseInt(pathDepartureTimeMinutes.getText())).getTime();
-            String url = String.format("http://localhost:8090/addPath?pathName=%s&startDate=%s&endDate=%s&seats=%s", pathName.getText(), departureTime, Utility.convertTime(Integer.parseInt(pathArriveTimeHour.getText()), Integer.parseInt(pathArriveTimeMinutes.getText())).getTime(), pathSeats.getText());
-            Unirest.post(url).asString().getBody();
-        } else {
-            List<String> tempDepartureTime = Utility.dateToList(paths.get(viewPath.getSelectionModel().getSelectedIndex()).getDepartureTime());
-            List<String> tempArriveTime = Utility.dateToList(paths.get(viewPath.getSelectionModel().getSelectedIndex()).getArrivalTime());
-            String url = "http://localhost:8090/updatePath?elementNumber=" + viewPath.getSelectionModel().getSelectedIndex();
-            if (!pathName.getText().equalsIgnoreCase(String.valueOf(paths.get(viewPath.getSelectionModel().getSelectedIndex()).getName())))
-                url = url.concat("&pathName=" + pathName.getText());
-            if (!pathArriveTimeMinutes.getText().equalsIgnoreCase(tempArriveTime.get(4)) || !pathArriveTimeHour.getText().equalsIgnoreCase(tempArriveTime.get(3)))
-                url = url.concat("&endDate=" + Utility.convertTime(Integer.parseInt(pathArriveTimeHour.getText()), Integer.parseInt(pathArriveTimeMinutes.getText())).getTime());
-            if (!pathDepartureTimeMinutes.getText().equalsIgnoreCase(tempDepartureTime.get(4)) || !pathDepartureTimeHour.getText().equalsIgnoreCase(tempDepartureTime.get(3)))
-                url = url.concat("&startDate=" + Utility.convertTime(Integer.parseInt(pathDepartureTimeHour.getText()), Integer.parseInt(pathDepartureTimeMinutes.getText())).getTime());
-            if (!pathSeats.getText().equalsIgnoreCase(String.valueOf(paths.get(viewPath.getSelectionModel().getSelectedIndex()).getSeats())))
-                url = url.concat("&seats=" + pathSeats.getText());
-            Unirest.put(url).asString().getBody();
+                Long departureTime = Utility.convertTime(Integer.parseInt(pathDepartureTimeHour.getText()), Integer.parseInt(pathDepartureTimeMinutes.getText())).getTime();
+                String url = String.format("http://localhost:8090/addPath?pathName=%s&startDate=%s&endDate=%s&seats=%s", pathName.getText(), departureTime, Utility.convertTime(Integer.parseInt(pathArriveTimeHour.getText()), Integer.parseInt(pathArriveTimeMinutes.getText())).getTime(), pathSeats.getText());
+                Unirest.post(url).asString().getBody();
+            } else {
+                List<String> tempDepartureTime = Utility.dateToList(paths.get(viewPath.getSelectionModel().getSelectedIndex()).getDepartureTime());
+                List<String> tempArriveTime = Utility.dateToList(paths.get(viewPath.getSelectionModel().getSelectedIndex()).getArrivalTime());
+                String url = "http://localhost:8090/updatePath?elementNumber=" + viewPath.getSelectionModel().getSelectedIndex();
+                if (!pathName.getText().equalsIgnoreCase(String.valueOf(paths.get(viewPath.getSelectionModel().getSelectedIndex()).getName())))
+                    url = url.concat("&pathName=" + pathName.getText());
+                if (!pathArriveTimeMinutes.getText().equalsIgnoreCase(tempArriveTime.get(4)) || !pathArriveTimeHour.getText().equalsIgnoreCase(tempArriveTime.get(3)))
+                    url = url.concat("&endDate=" + Utility.convertTime(Integer.parseInt(pathArriveTimeHour.getText()), Integer.parseInt(pathArriveTimeMinutes.getText())).getTime());
+                if (!pathDepartureTimeMinutes.getText().equalsIgnoreCase(tempDepartureTime.get(4)) || !pathDepartureTimeHour.getText().equalsIgnoreCase(tempDepartureTime.get(3)))
+                    url = url.concat("&startDate=" + Utility.convertTime(Integer.parseInt(pathDepartureTimeHour.getText()), Integer.parseInt(pathDepartureTimeMinutes.getText())).getTime());
+                if (!pathSeats.getText().equalsIgnoreCase(String.valueOf(paths.get(viewPath.getSelectionModel().getSelectedIndex()).getSeats())))
+                    url = url.concat("&seats=" + pathSeats.getText());
+                Unirest.put(url).asString().getBody();
+            }
+            Stage stage = (Stage) pathArriveTimeHour.getScene().getWindow();
+            stage.close();
         }
-        Stage stage = (Stage) pathArriveTimeHour.getScene().getWindow();
-        stage.close();
-
     }
 
     void editPath() {
@@ -201,7 +202,16 @@ public class PathManagerController implements Initializable {
         if (pathArriveTimeMinutes.getText().length() < 2) {
             pathArriveTimeMinutes.setText("0" + pathArriveTimeMinutes.getText());
         }
-        return true;
+        if (pathDepartureTimeHour.getText().length() > 24) {
+            return false;
+        }
+        if (pathDepartureTimeMinutes.getText().length() > 60) {
+            return false;
+        }
+        if (pathArriveTimeHour.getText().length() > 24) {
+            return false;
+        }
+        return pathArriveTimeMinutes.getText().length() <= 64;
     }
 
     @Override
@@ -219,12 +229,7 @@ public class PathManagerController implements Initializable {
             viewPath.getItems().add(path.getPathNumber() + ": " + path.getName());
         }
 
-        viewPath.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observableValue, Number number, Number number2) {
-                editPath();
-            }
-        });
+        viewPath.getSelectionModel().selectedIndexProperty().addListener((observableValue, number, number2) -> editPath());
 
     }
 }

@@ -1,12 +1,12 @@
-package main;
+package main.controller;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import main.MainApplication;
 
 import java.io.IOException;
 
@@ -17,7 +17,7 @@ public class EditDatabaseController {
     private Label editDatabaseLabel; // Value injected by FXMLLoader
 
     @FXML
-    void editClass(ActionEvent event) throws IOException {
+    void editClass() throws IOException {
         FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("classDatabase.fxml"));
         Stage stage = new Stage();
         Scene sceneSearch = new Scene(loader.load(), 496, 259);
@@ -32,7 +32,7 @@ public class EditDatabaseController {
     }
 
     @FXML
-    void editLink(ActionEvent event) throws IOException {
+    void editLink() throws IOException {
         FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("linkDatabase.fxml"));
         Stage stage = new Stage();
         Scene sceneSearch = new Scene(loader.load(), 496, 259);
@@ -47,7 +47,7 @@ public class EditDatabaseController {
     }
 
     @FXML
-    void editPath(ActionEvent event) throws IOException {
+    void editPath() throws IOException {
         FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("pathDatabase.fxml"));
         Stage stage = new Stage();
         Scene sceneSearch = new Scene(loader.load(), 496, 259);
@@ -62,7 +62,7 @@ public class EditDatabaseController {
     }
 
     @FXML
-    void editStation(ActionEvent event) throws IOException {
+    void editStation() throws IOException {
         FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("stationDatabase.fxml"));
         Stage stage = new Stage();
         Scene sceneSearch = new Scene(loader.load(), 496, 259);
@@ -77,7 +77,7 @@ public class EditDatabaseController {
     }
 
     @FXML
-    void editTicket(ActionEvent event) throws IOException {
+    void editTicket() throws IOException {
         FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("ticketDatabase.fxml"));
         Stage stage = new Stage();
         Scene sceneSearch = new Scene(loader.load(), 496, 259);

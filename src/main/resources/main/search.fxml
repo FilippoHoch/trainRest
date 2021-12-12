@@ -5,7 +5,7 @@
 <?import javafx.scene.text.Font?>
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="375.0"
             prefWidth="300.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="main.SearchController">
+            fx:controller="main.controller.SearchController">
     <Label layoutX="53.0" layoutY="14.0" text="Cerca il biglietto ideale">
         <font>
             <Font name="System Bold" size="18.0"/>
@@ -21,7 +21,8 @@
     <Button fx:id="find" layoutX="239.0" layoutY="342.0" mnemonicParsing="false" onAction="#findTickets" text="Cerca"/>
     <Label layoutX="15.0" layoutY="220.0" text="Orario di partenza:"/>
     <Label layoutX="13.0" layoutY="252.0" text="Orario di arrivo:"/>
-    <Label fx:id="errorMessage" layoutX="124.0" layoutY="311.0" prefHeight="18.0" prefWidth="46.0"/>
+    <Label fx:id="errorMessage" alignment="CENTER" contentDisplay="CENTER" layoutX="56.0" layoutY="315.0"
+           prefHeight="18.0" prefWidth="176.0" textAlignment="CENTER"/>
     <DatePicker fx:id="travelDate" layoutX="135.0" layoutY="280.0" prefHeight="26.0" prefWidth="150.0"/>
     <Label layoutX="14.0" layoutY="285.0" text="Giorno:"/>
     <TextField fx:id="departureTimeHour" layoutX="135.0" layoutY="215.0" prefHeight="26.0" prefWidth="70.0"/>

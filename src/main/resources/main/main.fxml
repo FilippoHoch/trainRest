@@ -5,7 +5,7 @@
 <?import javafx.scene.text.Font?>
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
             prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="main.MainController">
+            fx:controller="main.controller.MainController">
     <Button fx:id="find" layoutX="14.0" layoutY="25.0" mnemonicParsing="false" onAction="#searchTickets" text="Cerca"/>
     <ListView fx:id="listViewTickets" layoutX="14.0" layoutY="114.0" onMouseClicked="#selectTicket" prefHeight="278.0"
               prefWidth="575.0"/>

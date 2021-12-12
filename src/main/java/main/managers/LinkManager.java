@@ -30,10 +30,14 @@ public class LinkManager {
         return filteredLinks;
     }
 
+    public int getNumberOfLinks(int pathNumber) {
+        return getLinks(pathNumber).size();
+    }
+
     public void addLink(Link link) {
         int key = link.getStartStation();
         if (!links.containsKey(key)) {
-            links.put(key, new ArrayList<Link>());
+            links.put(key, new ArrayList<>());
         }
         links.get(key).add(link);
     }

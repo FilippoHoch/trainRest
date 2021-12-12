@@ -1,4 +1,4 @@
-package main;
+package main.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,11 +13,16 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import kong.unirest.Unirest;
+import main.Class;
+import main.Path;
+import main.Ticket;
+import main.Utility;
 
 import java.net.URL;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class TicketManagerController implements Initializable {
@@ -55,7 +60,7 @@ public class TicketManagerController implements Initializable {
 
     @FXML
     void cancelEditTicket(ActionEvent event) {
-        
+
         Stage stage = (Stage) labelRoadPath.getScene().getWindow();
         stage.close();
     }
@@ -63,7 +68,7 @@ public class TicketManagerController implements Initializable {
     @FXML
     void deleteTicket(ActionEvent event) {
         Unirest.delete("http://localhost:8090/removeTicket?elementNumber=" + viewTicket.getSelectionModel().getSelectedIndex()).asString().getBody();
-        
+
         Stage stage = (Stage) labelRoadPath.getScene().getWindow();
         stage.close();
     }
@@ -97,13 +102,12 @@ public class TicketManagerController implements Initializable {
                 url = url.concat("&roadPath=" + paths.get(ticketRoadPath.getSelectionModel().getSelectedIndex()).getPathNumber());
             if ((Utility.stringToDateTime(ticketDay.getValue().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + "-00:00")).getTime() != tickets.get(viewTicket.getSelectionModel().getSelectedIndex()).getDay().getTime())
                 url = url.concat("&day=" + Utility.stringToDateTime(ticketDay.getValue().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + "-00:00").getTime());
-            if (classes.get(ticketClass.getSelectionModel().getSelectedIndex()).getClassNumber() != tickets.get(viewTicket.getSelectionModel().getSelectedIndex()).getaClass().getClassNumber())
+            if (!Objects.equals(classes.get(ticketClass.getSelectionModel().getSelectedIndex()).getClassNumber(), tickets.get(viewTicket.getSelectionModel().getSelectedIndex()).getaClass().getClassNumber()))
                 url = url.concat("&classNumber=" + classes.get(ticketClass.getSelectionModel().getSelectedIndex()).getClassNumber());
             Unirest.put(url).asString().getBody();
         }
 
 
-        
         Stage stage = (Stage) labelRoadPath.getScene().getWindow();
         stage.close();
     }
@@ -153,12 +157,7 @@ public class TicketManagerController implements Initializable {
             ticketRoadPath.getItems().add(String.valueOf(path.getPathNumber()));
         }
 
-        viewTicket.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observableValue, Number number, Number number2) {
-                editPath();
-            }
-        });
+        viewTicket.getSelectionModel().selectedIndexProperty().addListener((observableValue, number, number2) -> editPath());
 
     }
 }

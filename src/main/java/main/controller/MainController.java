@@ -1,14 +1,9 @@
-/**
- * Sample Skeleton for 'main.fxml' Controller Class
- */
-
-package main;
+package main.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -19,6 +14,10 @@ import javafx.scene.control.ListView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import kong.unirest.Unirest;
+import main.MainApplication;
+import main.Path;
+import main.Ticket;
+import main.Utility;
 
 import java.awt.*;
 import java.io.IOException;
@@ -109,7 +108,7 @@ public class MainController implements Initializable {
     }
 
     @FXML // fx:id="dropDownFilter"
-    private ChoiceBox dropDownFilter; // Value injected by FXMLLoader
+    private ChoiceBox<String> dropDownFilter; // Value injected by FXMLLoader
 
     @FXML // fx:id="find"
     private Button find; // Value injected by FXMLLoader
@@ -132,12 +131,7 @@ public class MainController implements Initializable {
         dropDownFilter.getItems().add("orario di arrivo");
         dropDownFilter.getItems().add("numero fermate");
 
-        dropDownFilter.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observableValue, Number number, Number number2) {
-                sortTickets();
-            }
-        });
+        dropDownFilter.getSelectionModel().selectedIndexProperty().addListener((observableValue, number, number2) -> sortTickets());
 
         dropDownFilter.setDisable(true);
     }
@@ -145,11 +139,9 @@ public class MainController implements Initializable {
     /**
      * after you touch it, it opens a link for the project on your browser
      *
-     * @param event
-     * @return returns the link for the project on github
      */
     @FXML
-    void openGuide(ActionEvent event) {
+    void openGuide() {
         try {
             Desktop.getDesktop().browse(new URL("https://github.com/FilippoHoch/trainRest").toURI());
         } catch (IOException | URISyntaxException e) {
@@ -158,9 +150,8 @@ public class MainController implements Initializable {
     }
 
     /**
-     * open and closes correctly the fxml to show the window for inserting the informations
+     * open and closes correctly the fxml to show the window for inserting the information
      *
-     * @return returns a date
      */
     @FXML
     void searchTickets() throws IOException {
@@ -185,9 +176,8 @@ public class MainController implements Initializable {
 
 
     /**
-     * based on the file json, this function returns all the informations in java
+     * based on the file json, this function returns all the information in java
      *
-     * @return returns all the ticket information
      */
     private void getTickets() {
 //        System.out.println(String.format("%s \n %s \n %s \n %s \n %s \n %s", selectedDestinationStation, Utility.dateToString(selectedArriveTime), selectedChosenClass, Utility.dateToString(selectedDepartureTime),  selectedDisponibilityPrice, selectedStartingStation));
@@ -207,9 +197,8 @@ public class MainController implements Initializable {
     }
 
     /**
-     * after you select one of this filters, all of the tickets will be ordered based on that filter
+     * after you select one of these filters, all the tickets will be ordered based on that filter
      *
-     * @return returns the tickets ordered in a certain way
      */
     private void sortTickets() {
         if (dropDownFilter.getSelectionModel().getSelectedIndex() == 0)
@@ -224,19 +213,20 @@ public class MainController implements Initializable {
             Utility.sortTicketsByDepartureDate(tickets);
         if (dropDownFilter.getSelectionModel().getSelectedIndex() == 4)
             Utility.sortTicketsByArriveDate(tickets);
-    // TODO: 08/12/2021 resolve sort problems
         if (dropDownFilter.getSelectionModel().getSelectedIndex() == 5)
             Utility.sortTicketsByPathLinkNumber(paths);
         else
             Utility.sortTicketsByPathNumber(paths);
 
-        setListViewTickets();
+        if (dropDownFilter.getSelectionModel().getSelectedIndex() != 5 && dropDownFilter.getSelectionModel().getSelectedIndex() != 2)
+            setListViewTickets();
+        else
+            setListViewTicketsByPath();
     }
 
     /**
-     * this function orders correctly all of the tickets after you give a filter
+     * this function orders correctly all the tickets after you give a filter
      *
-     * @return returns the correct visualisation of the tickets
      */
     private void setListViewTickets() {
         dropDownFilter.setDisable(false);
@@ -244,16 +234,32 @@ public class MainController implements Initializable {
             listViewTickets.getItems().remove(0, listViewTickets.getItems().size());
         for (Ticket ticket : tickets) {
             for (Path path : paths) {
-                if (path.getPathNumber() == ticket.getRoadPath())
+                if (path.getPathNumber() == ticket.getRoadPath()) {
                     listViewTickets.getItems().add(String.format("%s: %s, Orario partenza: %s - Orario arrivo: %s, Prezzo: %s ", ticket.getRoadPath(), path.getName(), Utility.dateToString(ticket.getDepartureDate()), Utility.dateToString(ticket.getArriveDate()), ticket.getTotalCost()));
+                    break;
+                }
             }
         }
     }
 
+    private void setListViewTicketsByPath() {
+        dropDownFilter.setDisable(false);
+        if (!listViewTickets.getItems().isEmpty())
+            listViewTickets.getItems().remove(0, listViewTickets.getItems().size());
+        for (Path path : paths) {
+            for (Ticket ticket : tickets) {
+                if (path.getPathNumber() == ticket.getRoadPath()) {
+                    listViewTickets.getItems().add(String.format("%s: %s, Orario partenza: %s - Orario arrivo: %s, Prezzo: %s ", ticket.getRoadPath(), path.getName(), Utility.dateToString(ticket.getDepartureDate()), Utility.dateToString(ticket.getArriveDate()), ticket.getTotalCost()));
+                    break;
+                }
+            }
+        }
+    }
+
+
     /**
      * shows the ticket after you click it
      *
-     * @return shows you the ticket
      */
     @FXML
     private void selectTicket() throws IOException {
@@ -266,7 +272,7 @@ public class MainController implements Initializable {
             ticketSelected = tickets.get(selectedTicket);
             for (Path path : paths) {
                 if (path.getPathNumber() == ticketSelected.getRoadPath()) {
-                    stage.setTitle("Ticket " + path.getName());
+                    stage.setTitle("Ticket");
                     setPathSelected(path);
                     break;
                 }
