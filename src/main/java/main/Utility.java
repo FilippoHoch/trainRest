@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kong.unirest.Unirest;
 import main.managers.LinkManager;
+import main.managers.StationManager;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -189,7 +190,6 @@ public class Utility {
         ObjectMapper om = new ObjectMapper();
         LinkManager linkManager = new LinkManager();
         String jsonLinks = Unirest.get("http://localhost:8090/links").asString().getBody();
-
 
         try {
             linkManager.addAllLinks(om.readerForListOf(Link.class).readValue(jsonLinks));

@@ -286,9 +286,6 @@ public class ServerRest {
 
         get("/links", ((request, response) -> om.writeValueAsString(linkManager.getAllLinks())));
 
-
-        get("/all", ((request, response) -> om.writeValueAsString(tickets)));
-
         get("/tickets", ((request, response) -> {
 
 
@@ -321,10 +318,12 @@ public class ServerRest {
                 } else {
                     for (int a : numbers) {
                         System.out.print("path number " + a + " available from " + startStation.getName() + " to " + endStation.getName() + "\n");
-                        for (Ticket ticket : tickets) {
-                            startingTime = startingStationTime(a, start, ticket.getDay());
+                List<Station> stations = pathFinder.getPath(start,end,a,stationManager.getAllStations(), linkManager.getAllLinks());
 
-                            destinationTime = destinationStationTime(a, end, ticket.getDay());
+                        for (Ticket ticket : tickets) {
+                            startingTime = startingStationTime(stations, ticket.getDay(),a, paths);
+
+                            destinationTime = destinationStationTime(stations, ticket.getDay(),a, paths);
                             if (ticket.getRoadPath() == a && ticket.getaClass().getClassNumber().toString().equalsIgnoreCase(chosenClass) &&
                                     ticket.getTotalCost() <= Double.parseDouble(disponibilityPrice) && startingTime.getTime() >= Utility.stringToDateTime(departureTime).getTime()
                                     && destinationTime.getTime() <= Utility.stringToDateTime(arriveTime).getTime() && paths.get(a).getSeats() > 0) {
@@ -352,28 +351,35 @@ public class ServerRest {
     // "dd/MM/yyyy-hh:mm"
     // " dow mon dd hh:mm:ss zzz yyyy"
 
-    public static Date destinationStationTime(int pathNumber, int destinationStation, Date day) {
-
-        List<Link> linkList = linkManager.getLinks(pathNumber);
-
+    public static Date destinationStationTime(List<Station> stations, Date day, int pathNumber, List<Path> paths) {
+        Station previousStation = null;
         int time = 0;
-        for (Link link : linkList) {
-            time += link.getCost();
-            if (link.getEndStation() == destinationStation)
-                break;
+        for (Station station : stations) {
+            int cost = 0;
+            if (station != stations.get(0)) {
+                cost = linkManager.getLinks(previousStation, station, pathNumber).get(0).getCost();
+            }
+            time += cost;
+            previousStation = station;
         }
-        return new Date(day.getTime() + paths.get(pathNumber).getDepartureTime().getTime() + (time * 60000L));
+        long dateResult = time * 60000L + day.getTime() + paths.get(pathNumber).getDepartureTime().getTime();
+        return new Date(dateResult);
     }
 
-    public static Date startingStationTime(int pathNumber, int startingStation, Date day) {
-        List<Link> linkList = linkManager.getLinks(pathNumber);
-        if (linkList.get(0).getStartStation() == startingStation)
-            return new Date(day.getTime() + paths.get(pathNumber).getDepartureTime().getTime());
+
+    public static Date startingStationTime(List<Station> stations, Date day, int pathNumber, List<Path> paths) {
+        Station previousStation = null;
         int time = 0;
-        for (Link link : linkList) {
-            time += link.getCost();
-            if (link.getEndStation() == startingStation)
+        for (Station station : stations) {
+            int cost = 0;
+            if (station != stations.get(0)) {
+                cost = linkManager.getLinks(previousStation, station, pathNumber).get(0).getCost();
+            }
+            time += cost;
+            if (station.getId() == stations.get(0).getId())
                 break;
+            previousStation = station;
+
         }
         long dateResult = time * 60000L + day.getTime() + paths.get(pathNumber).getDepartureTime().getTime();
         return new Date(dateResult);
