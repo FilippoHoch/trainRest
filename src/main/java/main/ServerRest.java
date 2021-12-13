@@ -258,14 +258,14 @@ public class ServerRest {
                 return "Missing element number";
             if (request.queryParams().contains("classNumber"))
                 classes.get(Integer.parseInt(request.queryParams("elementNumber"))).setMultiplier(Integer.parseInt(request.queryParams("classNumber")));
-            if (request.queryParams().contains("multiplayer"))
-                classes.get(Integer.parseInt(request.queryParams("elementNumber"))).setMultiplier(Double.parseDouble(request.queryParams("multiplayer")));
+            if (request.queryParams().contains("multiplier"))
+                classes.get(Integer.parseInt(request.queryParams("elementNumber"))).setMultiplier(Double.parseDouble(request.queryParams("multiplier")));
             return "Station Updated";
         })));
 
         post("/addClass", (((request, response) -> {
 
-            classes.add(new Class(Integer.parseInt(request.queryParams("classNumber")), Integer.parseInt(request.queryParams("multiplayer"))));
+            classes.add(new Class(Integer.parseInt(request.queryParams("classNumber")), Integer.parseInt(request.queryParams("multiplier"))));
             return "Class Added";
         })));
 

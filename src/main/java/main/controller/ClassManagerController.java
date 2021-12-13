@@ -86,14 +86,14 @@ public class ClassManagerController implements Initializable {
                 return;
             if (Objects.equals(classMultiplier.getText(), ""))
                 return;
-            String url = String.format("http://localhost:8090/addClass?classNumber=%s&multiplayer=%s", className.getText(), classMultiplier.getText());
+            String url = String.format("http://localhost:8090/addClass?classNumber=%s&multiplier=%s", className.getText(), classMultiplier.getText());
             Unirest.post(url).asString().getBody();
         } else {
             String url = "http://localhost:8090/updateClass?elementNumber=" + viewClass.getSelectionModel().getSelectedIndex();
             if (!className.getText().equalsIgnoreCase(String.valueOf(classes.get(viewClass.getSelectionModel().getSelectedIndex()).getClassNumber())))
                 url = url.concat("&className=" + className.getText());
             if (!classMultiplier.getText().equalsIgnoreCase(String.valueOf(classes.get(viewClass.getSelectionModel().getSelectedIndex()).getMultiplier())))
-                url = url.concat("&multiplayer=" + classMultiplier.getText());
+                url = url.concat("&multiplier=" + classMultiplier.getText());
             Unirest.put(url).asString().getBody();
         }
         Stage stage = (Stage) classMultiplier.getScene().getWindow();

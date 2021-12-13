@@ -21,9 +21,9 @@ Quando negli esempi vieni utilizzata la dicitura ````%s```` ci si riferisci alla
 Gli attributi di biglietto sono:
 
 ````java
-roadPath=int;
-        day=Date().getTime(); // La data in millisecondi
-        classNumber=int; // La classe a cui è riferito il biglietto dove per classe, la classe del treno (es. Prima Classe, che nel nostro caso sarà -> 1)
+roadPath = int;
+day = Date().getTime(); // La data in millisecondi
+classNumber = int; // La classe a cui è riferito il biglietto dove per classe, la classe del treno (es. Prima Classe, che nel nostro caso sarà -> 1)
 ````
 
 ### Aggiorna Biglietto (PUT)
@@ -50,13 +50,21 @@ Permette di eliminare un biglietto
 http://localhost:8090/removeTicket?elementNumber=%s
 ````
 
+### Ottenere tutti i Biglietti (GET)
+
+Permette di ottenere tutti i biglietti salvati
+
+````
+http://localhost:8090/tickets
+````
+
 ## Classi
 
-Gli attributi di biglietto sono:
+Gli attributi della classe sono:
 
 ````java
-classNumber=int; // La classe a cui viene riferito ogni biglietto
-        multiplier=double; // Il moltiplicatore che determinerà il prezzo del biglietto in base alla classe
+classNumber = int; // La classe a cui viene riferito ogni biglietto
+multiplier = double; // Il moltiplicatore che determinerà il prezzo del biglietto in base alla classe
 ````
 
 ### Aggiorna Classe (PUT)
@@ -64,7 +72,7 @@ classNumber=int; // La classe a cui viene riferito ogni biglietto
 Permette di aggiornare la classe passando nel url i paramatri utili a inizializzare una classe:
 
 ````
-http://localhost:8090/updateClass?elementNumber=%s&classNumber=%s&miltuplier=%s
+http://localhost:8090/updateClass?elementNumber=%s&classNumber=%s&multiplier=%s
 ````
 
 ### Aggiungi Classe (POST)
@@ -83,15 +91,23 @@ Permette di eliminare una classe
 http://localhost:8090/removeClass?elementNumber=%s
 ````
 
+### Ottenere tutte le Classi (GET)
+
+Permette di ottenere tutte le classi salvate
+
+````
+http://localhost:8090/classes
+````
+
 ## Collegamenti
 
 Gli attributi di collegamento sono:
 
 ````java
-startStation=int; // L'indice della prima stazione del collegamento tra due stazioni
-        endStation=int; // L'indice della seconda stazione del collegamento tra due stazioni
-        cost=double; // Il tempo in cui viene percorso il collegamento
-        pathNumber=int; // L'indice della tratta in cui si trova il collegamento
+startStation = int; // L'indice della prima stazione del collegamento tra due stazioni
+endStation = int; // L'indice della seconda stazione del collegamento tra due stazioni
+cost = double; // Il tempo in cui viene percorso il collegamento
+pathNumber = int; // L'indice della tratta in cui si trova il collegamento
 ````
 
 ### Aggiorna Collegamento (PUT)
@@ -104,18 +120,26 @@ http://localhost:8090/updateLink?elementNumber=%s&cost=%s&startStation=%s&endSta
 
 ### Aggiungi Collegamento (POST)
 
-Permette di aggiungere un collegamento
+Permette di aggiungere un collegamento tra due stazioni
 
 ````
-http://localhost:8090/addClass?classNumber=%s&multiplier=%s
+http://localhost:8090/addLink?cost=%s&startStation=%s&endStation=%s&pathNumber=%s
 ````
 
-### Rimuovi Classe (DELETE)
+### Rimuovi Collegamento (DELETE)
 
-Permette di eliminare una classe
+Permette di eliminare un collegamento tra due stazioni
 
 ````
-http://localhost:8090/removeClass?elementNumber=%s
+http://localhost:8090/removeLink?elementNumber=%s
+````
+
+### Ottenere tutti i Collegamenti (GET)
+
+Permette di ottenere tutti i collegamenti tra le stazioni
+
+````
+http://localhost:8090/links
 ````
 
 ## Stazioni
@@ -123,8 +147,7 @@ http://localhost:8090/removeClass?elementNumber=%s
 Gli attributi di stazioni sono:
 
 ````java
-setId=id; // L'id della stazione
-        setName=name; // Il nome della stazione
+stationName = String; // Il nome della stazione
 ````
 
 ### Aggiorna Stazioni (PUT)
@@ -151,19 +174,27 @@ Permette di eliminare la stazione
 http://localhost:8090/removeStation?elementNumber=%s
 ````
 
-## Percorso
+### Ottenere tutte le Stazioni (GET)
 
-Gli attributi di stazioni sono:
+Permette di ottenere tutte le stazioni salvate
 
-````java
-pathNumber=int; // Numero del percorso
-        name=String; // Nome del percorso
-        departureTime=Date().getTime(); // La data di partenza in millisecondi
-        arrivalTime=Date().getTime(); // La data di arrivo in millisecondi
-        seats=int; // Numero massimo di posti per quel percorso
+````
+http://localhost:8090/stations
 ````
 
-### Aggiorna Percorsi (PUT)
+## Percorso
+
+Gli attributi di percorso sono:
+
+````java
+pathNumber = int; // Numero del percorso
+name = String; // Nome del percorso
+startDate = Date().getTime(); // La data di partenza in millisecondi
+endDate = Date().getTime(); // La data di arrivo in millisecondi
+seats = int; // Numero massimo di posti per quel percorso
+````
+
+### Aggiorna Percorso (PUT)
 
 Permette di aggiornare gli elementi riguardanti i percorsi:
 
@@ -171,18 +202,25 @@ Permette di aggiornare gli elementi riguardanti i percorsi:
 http://localhost:8090/updatePath?elementNumber=%s&pathName=%s&endDate=%s&startDate=%s&seats=%s
 ````
 
-### Aggiungi Stazione (POST)
+### Aggiungi Percorso (POST)
 
-Permette di aggiungere una stazione
+Permette di aggiungere un percorso
 
 ````
-http://localhost:8090/addStation?pathName=%s&endDate=%s&startDate=%s&seats=%s
+http://localhost:8090/addPath?pathName=%s&endDate=%s&startDate=%s&seats=%s
 ````
 
-### Rimuovi Stazione (DELETE)
+### Rimuovi Percorso (DELETE)
 
-Permette di eliminare la stazione
+Permette di eliminare un percorso
 
 ````
 http://localhost:8090/removePath?elementNumber=%s
+````
+### Ottenere tutti i percorsi (GET)
+
+Permette di ottenere tutti i percorsi
+
+````
+http://localhost:8090/paths
 ````
