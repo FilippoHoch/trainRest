@@ -2,8 +2,6 @@ package main.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -138,7 +136,6 @@ public class MainController implements Initializable {
 
     /**
      * after you touch it, it opens a link for the project on your browser
-     *
      */
     @FXML
     void openGuide() {
@@ -151,7 +148,6 @@ public class MainController implements Initializable {
 
     /**
      * open and closes correctly the fxml to show the window for inserting the information
-     *
      */
     @FXML
     void searchTickets() throws IOException {
@@ -177,7 +173,6 @@ public class MainController implements Initializable {
 
     /**
      * based on the file json, this function returns all the information in java
-     *
      */
     private void getTickets() {
 //        System.out.println(String.format("%s \n %s \n %s \n %s \n %s \n %s", selectedDestinationStation, Utility.dateToString(selectedArriveTime), selectedChosenClass, Utility.dateToString(selectedDepartureTime),  selectedDisponibilityPrice, selectedStartingStation));
@@ -198,7 +193,6 @@ public class MainController implements Initializable {
 
     /**
      * after you select one of these filters, all the tickets will be ordered based on that filter
-     *
      */
     private void sortTickets() {
         if (dropDownFilter.getSelectionModel().getSelectedIndex() == 0)
@@ -226,7 +220,6 @@ public class MainController implements Initializable {
 
     /**
      * this function orders correctly all the tickets after you give a filter
-     *
      */
     private void setListViewTickets() {
         dropDownFilter.setDisable(false);
@@ -259,7 +252,6 @@ public class MainController implements Initializable {
 
     /**
      * shows the ticket after you click it
-     *
      */
     @FXML
     private void selectTicket() throws IOException {

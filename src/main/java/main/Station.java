@@ -37,7 +37,6 @@ public class Station {
 
     /**
      * override of the variable "path parent" and "path cost"
-     *
      */
     public void clear() {
         pathParent = -1;
@@ -62,7 +61,6 @@ public class Station {
 
     /**
      * based on the cost of the ticket, if this is smaller than a certain value, it will get changed, or it would be too cheap :)
-     *
      */
     public void updatePathCost(Station station, Link link) {
         int newCost = station.pathCost + link.getCost();
@@ -71,7 +69,6 @@ public class Station {
             setPathParent(station.getId());
         }
     }
-
 
 
     @Override

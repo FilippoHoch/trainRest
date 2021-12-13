@@ -112,9 +112,9 @@ public class ServerRest {
         linkManager.addLink(new Link(3, 1, 11, 5));
 
         // Classes
-        classes.add(new Class(1, 1.6));
-        classes.add(new Class(2, 1.2));
-        classes.add(new Class(3, 0.8));
+        classes.add(new Class(1, 1.2));
+        classes.add(new Class(2, 0.7));
+        classes.add(new Class(3, 0.5));
 
         // Tickets
         for (int i = 0; i < paths.size(); i++) {
@@ -318,12 +318,12 @@ public class ServerRest {
                 } else {
                     for (int a : numbers) {
                         System.out.print("path number " + a + " available from " + startStation.getName() + " to " + endStation.getName() + "\n");
-                List<Station> stations = pathFinder.getPath(start,end,a,stationManager.getAllStations(), linkManager.getAllLinks());
+                        List<Station> stations = pathFinder.getPath(start, end, a, stationManager.getAllStations(), linkManager.getAllLinks());
 
                         for (Ticket ticket : tickets) {
-                            startingTime = startingStationTime(stations, ticket.getDay(),a, paths);
+                            startingTime = startingStationTime(stations, ticket.getDay(), a, paths);
 
-                            destinationTime = destinationStationTime(stations, ticket.getDay(),a, paths);
+                            destinationTime = destinationStationTime(stations, ticket.getDay(), a, paths);
                             if (ticket.getRoadPath() == a && ticket.getaClass().getClassNumber().toString().equalsIgnoreCase(chosenClass) &&
                                     ticket.getTotalCost() <= Double.parseDouble(disponibilityPrice) && startingTime.getTime() >= Utility.stringToDateTime(departureTime).getTime()
                                     && destinationTime.getTime() <= Utility.stringToDateTime(arriveTime).getTime() && paths.get(a).getSeats() > 0) {

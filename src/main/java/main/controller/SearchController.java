@@ -148,30 +148,6 @@ public class SearchController implements Initializable {
         if (arriveTimeHour.getText().equals("")) {
             arriveTimeHour.setText("00");
         }
-        if (departureTimeHour.getText().length() < 2) {
-            departureTimeHour.setText("0" + departureTimeHour.getText());
-        }
-        if (arriveTimeHour.getText().length() < 2) {
-            arriveTimeHour.setText("0" + arriveTimeHour.getText());
-        }
-        if (departureTimeMinutes.getText().length() < 2) {
-            departureTimeMinutes.setText("0" + departureTimeMinutes.getText());
-        }
-        if (arriveTimeMinutes.getText().length() < 2) {
-            arriveTimeMinutes.setText("0" + arriveTimeMinutes.getText());
-        }
-        if (departureTimeHour.getText().length() > 24) {
-            return false;
-        }
-        if (arriveTimeHour.getText().length() > 24) {
-            return false;
-        }
-        if (departureTimeMinutes.getText().length() > 60) {
-            return false;
-        }
-        if (arriveTimeMinutes.getText().length() > 60) {
-            return false;
-        }
         if (startingStation.getValue() == null) {
             errorMessage.setText("Missing argument");
             return false;
@@ -190,6 +166,35 @@ public class SearchController implements Initializable {
         }
         if (chosenClass.getValue() == null) {
             errorMessage.setText("Missing argument");
+            return false;
+        }
+        try {
+            if (departureTimeHour.getText().length() < 2) {
+                departureTimeHour.setText("0" + departureTimeHour.getText());
+            }
+            if (arriveTimeHour.getText().length() < 2) {
+                arriveTimeHour.setText("0" + arriveTimeHour.getText());
+            }
+            if (departureTimeMinutes.getText().length() < 2) {
+                departureTimeMinutes.setText("0" + departureTimeMinutes.getText());
+            }
+            if (arriveTimeMinutes.getText().length() < 2) {
+                arriveTimeMinutes.setText("0" + arriveTimeMinutes.getText());
+            }
+            if (Integer.parseInt(departureTimeHour.getText()) > 24) {
+                return false;
+            }
+            if (Integer.parseInt(arriveTimeHour.getText()) > 24) {
+                return false;
+            }
+            if (Integer.parseInt(departureTimeMinutes.getText()) > 60) {
+                return false;
+            }
+            if (Integer.parseInt(arriveTimeMinutes.getText()) > 60) {
+                return false;
+            }
+        } catch (Exception e) {
+            errorMessage.setText("Bad parameters");
             return false;
         }
         return true;

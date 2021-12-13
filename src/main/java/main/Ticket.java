@@ -103,7 +103,6 @@ public class Ticket {
 
     /**
      * this function calculates the cost of the ticket based on the class and the cost of that singular ticket
-     *
      */
     public void setTotalCost(List<Link> linkList) {
         totalCost = 0;

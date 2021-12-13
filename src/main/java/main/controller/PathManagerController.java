@@ -119,7 +119,7 @@ public class PathManagerController implements Initializable {
 
     @FXML
     void savePath(ActionEvent event) {
-        if (checkParamets()){
+        if (checkParamets()) {
             if (deletePathButton.isDisable()) {
                 if (Objects.equals(pathSeats.getText(), ""))
                     return;

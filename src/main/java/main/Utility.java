@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kong.unirest.Unirest;
 import main.managers.LinkManager;
-import main.managers.StationManager;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

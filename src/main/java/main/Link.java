@@ -6,7 +6,6 @@ public class Link {
     private int pathNumber;
 
 
-
     public int getStartStation() {
         return startStation;
     }

@@ -11,7 +11,6 @@ public class ManagerApplication extends Application {
 
     /**
      * this is the first window that opens after you run the program
-     *
      */
     @Override
     public void start(Stage stage) throws IOException {
