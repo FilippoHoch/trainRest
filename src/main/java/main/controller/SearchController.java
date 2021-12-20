@@ -169,30 +169,26 @@ public class SearchController implements Initializable {
             return false;
         }
         try {
-            if (departureTimeHour.getText().length() < 2) {
+            if (departureTimeHour.getText().length() < 2)
                 departureTimeHour.setText("0" + departureTimeHour.getText());
-            }
-            if (arriveTimeHour.getText().length() < 2) {
+            if (arriveTimeHour.getText().length() < 2)
                 arriveTimeHour.setText("0" + arriveTimeHour.getText());
-            }
-            if (departureTimeMinutes.getText().length() < 2) {
+            if (departureTimeMinutes.getText().length() < 2)
                 departureTimeMinutes.setText("0" + departureTimeMinutes.getText());
-            }
-            if (arriveTimeMinutes.getText().length() < 2) {
+            if (arriveTimeMinutes.getText().length() < 2)
                 arriveTimeMinutes.setText("0" + arriveTimeMinutes.getText());
-            }
-            if (Integer.parseInt(departureTimeHour.getText()) > 24) {
+            if (Integer.parseInt(departureTimeHour.getText()) > 24)
                 return false;
-            }
-            if (Integer.parseInt(arriveTimeHour.getText()) > 24) {
+            if (Integer.parseInt(arriveTimeHour.getText()) > 24)
                 return false;
-            }
-            if (Integer.parseInt(departureTimeMinutes.getText()) > 60) {
+            if (Integer.parseInt(departureTimeMinutes.getText()) > 60)
                 return false;
-            }
-            if (Integer.parseInt(arriveTimeMinutes.getText()) > 60) {
+            if (Integer.parseInt(arriveTimeMinutes.getText()) > 60)
                 return false;
-            }
+            if(Integer.parseInt(arriveTimeHour.getText()) < Integer.parseInt(departureTimeHour.getText()))
+                return false;
+            else if (Integer.parseInt(arriveTimeHour.getText()) == Integer.parseInt(departureTimeHour.getText()) && Integer.parseInt(arriveTimeMinutes.getText()) < Integer.parseInt(departureTimeMinutes.getText()))
+                return false;
         } catch (Exception e) {
             errorMessage.setText("Bad parameters");
             return false;
